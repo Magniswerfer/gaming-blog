@@ -1,0 +1,88 @@
+{
+  "feeds": [
+    {
+      "name": "Kotaku",
+      "url": "https://kotaku.com/rss",
+      "website": "kotaku.com",
+      "description": "A leading gaming blog covering video games, culture, and industry news"
+    },
+    {
+      "name": "VG247",
+      "url": "https://vg247.com/feed",
+      "website": "vg247.com",
+      "description": "Premier video game blog based in the UK with comprehensive news coverage"
+    },
+    {
+      "name": "Touch Arcade",
+      "url": "https://toucharcade.com/feed",
+      "website": "toucharcade.com",
+      "description": "Leading blog dedicated to iOS games and apps"
+    },
+    {
+      "name": "GameSpot",
+      "url": "https://gamespot.com/feeds/mashup",
+      "website": "gamespot.com",
+      "description": "Leading platform for video game news, reviews, and entertainment"
+    },
+    {
+      "name": "Wolfs Gaming Blog",
+      "url": "https://wolfsgamingblog.com/feed",
+      "website": "wolfsgamingblog.com",
+      "description": "Comprehensive reviews of video games, tech gadgets, and board games"
+    },
+    {
+      "name": "Polygon",
+      "url": "https://polygon.com/rss/index.xml",
+      "website": "polygon.com",
+      "description": "Leading entertainment website covering video games, movies, TV shows, and comics"
+    },
+    {
+      "name": "DualShockers",
+      "url": "https://dualshockers.com/feed",
+      "website": "dualshockers.com",
+      "description": "Gaming blog delivering news, reviews, and in-depth articles on video games"
+    },
+    {
+      "name": "IGN All",
+      "url": "https://www.ign.com/rss/articles/feed",
+      "website": "ign.com",
+      "description": "The latest IGN news, reviews and videos about video games, movies, TV, tech and comics"
+    },
+    {
+      "name": "IGN Games",
+      "url": "https://www.ign.com/rss/articles/feed?categories=games",
+      "website": "ign.com",
+      "description": "IGN's gaming news, reviews and videos"
+    },
+    {
+      "name": "Game Informer",
+      "url": "https://www.gameinformer.com/rss.xml",
+      "website": "gameinformer.com",
+      "description": "The full Game Informer feed with news, previews, reviews, and features"
+    },
+    {
+      "name": "Rock Paper Shotgun",
+      "url": "https://www.rockpapershotgun.com/feed",
+      "website": "rockpapershotgun.com",
+      "description": "PC gaming news, reviews, and features"
+    },
+    {
+      "name": "Nintendo Life",
+      "url": "https://www.nintendolife.com/feeds/latest",
+      "website": "nintendolife.com",
+      "description": "Nintendo news, reviews and features"
+    },
+    {
+      "name": "Eurogamer",
+      "url": "https://www.eurogamer.net/feed",
+      "website": "eurogamer.net",
+      "description": "European gaming news, reviews and features"
+    },
+    {
+      "name": "PC Gamer",
+      "url": "https://www.pcgamer.com/rss",
+      "website": "pcgamer.com",
+      "description": "PC gaming news, reviews and features"
+    }
+  ]
+}
