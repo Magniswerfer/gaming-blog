@@ -34,7 +34,7 @@ export default function GameNewsItem({
   if (layout === "vertical") {
     return (
       <div
-        className={`game-news-item bg-background-light/30 backdrop-blur-sm border border-primary-dark/20 rounded-xl overflow-hidden ${className}`}
+        className={`game-news-item bg-background-light/30 backdrop-blur-sm border border-secondary/20 rounded-xl overflow-hidden ${className}`}
       >
         {showImage && item.image && (
           <div className="game-news-item-image">
@@ -46,7 +46,7 @@ export default function GameNewsItem({
           </div>
         )}
         <div className="game-news-item-content p-6">
-          <h3 className="font-serif text-xl text-white mb-2">
+          <h3 className="font-serif text-xl text-black mb-2">
             <a
               href={item.link}
               target="_blank"
@@ -57,16 +57,16 @@ export default function GameNewsItem({
             </a>
           </h3>
 
-          <div className="game-news-item-meta flex flex-wrap gap-2 text-white/70 text-sm mb-3">
+          <div className="game-news-item-meta flex flex-wrap gap-2 text-black/70 text-sm mb-3">
             {showSource && (
-              <span className="bg-primary-dark/50 px-3 py-1 rounded-full">
+              <span className="bg-secondary/50 px-3 py-1 rounded-full">
                 {item.source.name}
               </span>
             )}
             {showDate && <span>{formattedDate}</span>}
           </div>
 
-          <p className="game-news-item-description text-white/90 mb-4">
+          <p className="game-news-item-description text-black/90 mb-4">
             {cleanDescription}
           </p>
 
@@ -74,7 +74,7 @@ export default function GameNewsItem({
             href={item.link}
             target="_blank"
             rel="noopener noreferrer"
-            className="game-news-item-read-more inline-block px-4 py-2 bg-primary-dark hover:bg-accent-gold transition-colors text-white text-sm rounded-lg"
+            className="game-news-item-read-more inline-block px-4 py-2 bg-secondary hover:bg-accent-gold transition-colors text-white text-sm rounded-lg"
           >
             Read More at {item.source.name}
           </a>
@@ -86,7 +86,7 @@ export default function GameNewsItem({
   // Horizontal layout (original)
   return (
     <div
-      className={`game-news-item bg-background-light/30 backdrop-blur-sm border border-primary-dark/20 rounded-xl overflow-hidden ${className}`}
+      className={`game-news-item bg-background-light/30 backdrop-blur-sm border border-secondary/20 rounded-xl overflow-hidden ${className}`}
     >
       <div className="flex flex-col md:flex-row">
         {showImage && item.image && (
@@ -103,7 +103,7 @@ export default function GameNewsItem({
             showImage && item.image ? "md:w-2/3" : "w-full"
           }`}
         >
-          <h3 className="font-serif text-xl text-white mb-2">
+          <h3 className="font-serif text-xl text-black mb-2">
             <a
               href={item.link}
               target="_blank"
@@ -114,16 +114,16 @@ export default function GameNewsItem({
             </a>
           </h3>
 
-          <div className="game-news-item-meta flex flex-wrap gap-2 text-white/70 text-sm mb-3">
+          <div className="game-news-item-meta flex flex-wrap gap-2 text-black/70 text-sm mb-3">
             {showSource && (
-              <span className="bg-primary-dark/50 px-3 py-1 rounded-full">
+              <span className="bg-secondary/50 px-3 py-1 rounded-full">
                 {item.source.name}
               </span>
             )}
             {showDate && <span>{formattedDate}</span>}
           </div>
 
-          <p className="game-news-item-description text-white/90 mb-4">
+          <p className="game-news-item-description text-black/90 mb-4">
             {cleanDescription}
           </p>
 
@@ -131,7 +131,7 @@ export default function GameNewsItem({
             href={item.link}
             target="_blank"
             rel="noopener noreferrer"
-            className="game-news-item-read-more inline-block px-4 py-2 bg-primary-dark hover:bg-accent-gold transition-colors text-white text-sm rounded-lg"
+            className="game-news-item-read-more inline-block px-4 py-2 bg-secondary hover:bg-accent-gold transition-colors text-white text-sm rounded-lg"
           >
             Read More at {item.source.name}
           </a>

@@ -12,12 +12,29 @@ interface TokenCache {
 
 let tokenCache: TokenCache | null = null;
 
-// CORS headers
-const corsHeaders = {
-  "Access-Control-Allow-Origin": "*",
-  "Access-Control-Allow-Headers": "Content-Type, Authorization",
-  "Access-Control-Allow-Methods": "POST, OPTIONS",
-};
+// Explicitly allow requests from Sanity Studio
+const ALLOWED_ORIGINS = [
+  "http://localhost:3333",
+  "http://127.0.0.1:3333",
+  "https://questline.sanity.studio",
+];
+
+// Get CORS headers based on the origin of the request
+function getCorsHeaders(origin: string | null): HeadersInit {
+  // Allow the specific origin that made the request (if it's in our allowed list)
+  // This is more secure than using a wildcard "*"
+  const allowedOrigin = ALLOWED_ORIGINS.includes(origin || "")
+    ? origin
+    : ALLOWED_ORIGINS[0];
+
+  return {
+    "Access-Control-Allow-Origin": allowedOrigin || "*",
+    "Access-Control-Allow-Methods": "GET, POST, OPTIONS",
+    "Access-Control-Allow-Headers": "Content-Type, Authorization, Accept",
+    "Access-Control-Max-Age": "86400", // 24 hours
+    "Vary": "Origin", // Important when you vary response based on origin
+  };
+}
 
 /**
  * Fetch authentication token from Twitch API
@@ -70,15 +87,20 @@ async function getAuthToken(): Promise<string> {
  * Handle incoming requests
  */
 async function handler(req: Request): Promise<Response> {
-  // Handle CORS preflight requests
+  const url = new URL(req.url);
+  const origin = req.headers.get("Origin");
+  const corsHeaders = getCorsHeaders(origin);
+
+  console.log(`${req.method} ${url.pathname} Origin: ${origin || "none"}`);
+
+  // Handle preflight CORS requests (OPTIONS)
   if (req.method === "OPTIONS") {
+    console.log("Handling CORS preflight request");
     return new Response(null, {
       status: 204,
       headers: corsHeaders,
     });
   }
-
-  const url = new URL(req.url);
 
   // Handle IGDB Games endpoint
   if (req.method === "POST" && url.pathname === "/igdb/games") {
@@ -87,7 +109,22 @@ async function handler(req: Request): Promise<Response> {
       const token = await getAuthToken();
 
       // Get the request body (the IGDB query)
-      const requestData = await req.json().catch(() => null);
+      let requestData;
+      try {
+        requestData = await req.json();
+      } catch (e) {
+        console.error("Error parsing request JSON:", e);
+        return new Response(
+          JSON.stringify({ error: "Invalid JSON in request body" }),
+          {
+            status: 400,
+            headers: {
+              "Content-Type": "application/json",
+              ...corsHeaders,
+            },
+          },
+        );
+      }
 
       if (!requestData || !requestData.query) {
         return new Response(
@@ -104,6 +141,10 @@ async function handler(req: Request): Promise<Response> {
 
       // Forward the request to IGDB
       const clientId = Deno.env.get("TWITCH_CLIENT_ID");
+      console.log(
+        `Forwarding request to IGDB: ${requestData.query.substring(0, 50)}...`,
+      );
+
       const igdbResponse = await fetch(`${IGDB_API_URL}/games`, {
         method: "POST",
         headers: {
@@ -131,13 +172,20 @@ async function handler(req: Request): Promise<Response> {
 
       // Return the IGDB response
       const igdbData = await igdbResponse.json();
-      return new Response(JSON.stringify(igdbData), {
-        status: 200,
-        headers: {
-          "Content-Type": "application/json",
-          ...corsHeaders,
+      console.log(
+        `IGDB response received with ${igdbData.length || 0} results`,
+      );
+
+      return new Response(
+        JSON.stringify(igdbData),
+        {
+          status: 200,
+          headers: {
+            "Content-Type": "application/json",
+            ...corsHeaders,
+          },
         },
-      });
+      );
     } catch (error: unknown) {
       console.error("Error handling request:", error);
       const errorMessage = error instanceof Error
@@ -160,15 +208,19 @@ async function handler(req: Request): Promise<Response> {
   }
 
   // Handle unsupported routes
-  return new Response(JSON.stringify({ error: "Not found" }), {
-    status: 404,
-    headers: {
-      "Content-Type": "application/json",
-      ...corsHeaders,
+  return new Response(
+    JSON.stringify({ error: "Not found", path: url.pathname }),
+    {
+      status: 404,
+      headers: {
+        "Content-Type": "application/json",
+        ...corsHeaders,
+      },
     },
-  });
+  );
 }
 
 // Start the server
 console.log("IGDB Proxy server starting on http://localhost:8000");
+console.log(`Allowed origins: ${ALLOWED_ORIGINS.join(", ")}`);
 await serve(handler, { port: 8000 });

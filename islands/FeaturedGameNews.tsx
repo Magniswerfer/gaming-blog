@@ -63,7 +63,7 @@ export default function FeaturedGameNews(
               Loading...
             </span>
           </div>
-          <p className="mt-2 text-white/70">Loading latest gaming news...</p>
+          <p className="mt-2 text-black/70">Loading latest gaming news...</p>
         </div>
       </div>
     );
@@ -82,7 +82,7 @@ export default function FeaturedGameNews(
   if (items.length === 0) {
     return (
       <div className={`featured-game-news-empty ${className}`}>
-        <p className="text-white/70 text-center py-8">
+        <p className="text-black/70 text-center py-8">
           No gaming news available at the moment.
         </p>
       </div>
@@ -107,7 +107,7 @@ export default function FeaturedGameNews(
       <div className="text-center mt-8">
         <a
           href="/news"
-          className="inline-block px-8 py-3 bg-primary-dark hover:bg-accent-gold transition-colors text-white font-medium rounded-lg"
+          className="inline-block px-8 py-3 bg-secondary hover:bg-accent-gold transition-colors text-white font-medium rounded-lg"
         >
           See All News
         </a>

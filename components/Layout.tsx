@@ -8,13 +8,32 @@ interface LayoutProps {
 }
 
 export default function Layout(
-  { children, title = "The Questline" }: LayoutProps,
+  { children, title = "CRITICO" }: LayoutProps,
 ) {
-  const navigationLinks = [
-    { href: "/", text: "Home" },
-    { href: "/blog", text: "Blog" },
-    { href: "/news", text: "News" },
-    { href: "/about", text: "About" },
+  // Navigation sections with Danish labels
+  const mainSections = [
+    { href: "/nyheder", text: "Nyheder" },
+    { href: "/anmeldelser", text: "Anmeldelser" },
+    { href: "/features", text: "Features" },
+    { href: "/debat", text: "Debat" },
+    { href: "/om", text: "Om" },
+  ];
+
+  const gameCategories = [
+    { href: "/category/rpg", text: "RPG" },
+    { href: "/category/action", text: "Action" },
+    { href: "/category/adventure", text: "Adventure" },
+    { href: "/category/strategy", text: "Strategy" },
+    { href: "/category/simulation", text: "Simulation" },
+    { href: "/category/sports", text: "Sports" },
+    { href: "/category/indie", text: "Indie" },
+  ];
+
+  const recommendationSections = [
+    { href: "/best-games", text: "Best Games" },
+    { href: "/upcoming", text: "Upcoming Games" },
+    { href: "/staff-picks", text: "Staff Picks" },
+    { href: "/hidden-gems", text: "Hidden Gems" },
   ];
 
   return (
@@ -23,68 +42,167 @@ export default function Layout(
         <title>{title}</title>
         <link
           rel="stylesheet"
-          href="https://fonts.googleapis.com/css2?family=Merriweather:wght@400;700&family=Lato:wght@400;500;600&display=swap"
+          href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&family=Merriweather:wght@400;700&display=swap"
         />
       </Head>
-      <div class="min-h-screen bg-background-dark text-white font-sans">
-        <header class="fixed top-0 w-full bg-background-light/50 backdrop-blur-sm border-b border-primary-dark/20 z-40">
-          <nav class="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
-            <a href="/" class="flex items-center space-x-3 group">
-              <img
-                src="/logo.svg"
-                alt="The Questline Logo"
-                class="h-10 w-10 transition-transform group-hover:scale-105"
-              />
-              <span class="font-serif text-2xl font-medium text-white group-hover:text-accent-gold transition-colors">
-                The Questline
+      <div className="min-h-screen font-sans bg-background-dark">
+        {/* Top utility bar */}
+        <div className="bg-background-dark text-black border-b border-secondary/20">
+          <div className="max-w-7xl mx-auto px-4 py-1 flex justify-between items-center text-xs">
+            <div className="flex items-center space-x-4">
+              <span>
+                {new Date().toLocaleDateString("en-US", {
+                  weekday: "long",
+                  month: "long",
+                  day: "numeric",
+                  year: "numeric",
+                })}
               </span>
-            </a>
+            </div>
+            <div className="flex items-center space-x-4">
+              <a href="/newsletter">
+                Nyhedsbrev
+              </a>
+              <a href="/search">
+                Søg
+              </a>
+            </div>
+          </div>
+        </div>
 
-            {/* Desktop Navigation */}
-            <div class="hidden md:flex space-x-8">
-              {navigationLinks.map((link) => (
-                <a
-                  key={link.href}
-                  href={link.href}
-                  class="text-white/90 hover:text-accent-gold transition-colors font-medium"
-                >
-                  {link.text}
+        {/* Main masthead */}
+        <header className="bg-background-light backdrop-blur-sm border-b border-secondary/20 pt-4 pb-2">
+          <div className="max-w-7xl mx-auto px-4">
+            <div className="relative flex justify-between items-center mb-4">
+              {/* Left side - Mobile menu */}
+              <div className="md:hidden z-10">
+                <MobileMenu links={mainSections} />
+              </div>
+
+              {/* Center - CRITICO title as a link */}
+              <div className="flex-1 text-center">
+                <a href="/" className="inline-block hover:no-underline">
+                  <h1 className="font-sans font-black text-4xl tracking-title uppercase text-black">
+                    CRITICO
+                  </h1>
                 </a>
-              ))}
+              </div>
             </div>
 
-            {/* Mobile Navigation */}
-            <MobileMenu links={navigationLinks} />
-          </nav>
-        </header>
-
-        <main class="pt-24">
-          {children}
-        </main>
-
-        <footer class="mt-24 py-12 bg-background-light/30 backdrop-blur-sm">
-          <div class="max-w-7xl mx-auto px-6">
-            <div class="flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0">
-              <div class="flex items-center space-x-3">
-                <img src="/logo.svg" alt="The Questline Logo" class="h-8 w-8" />
-                <span class="font-serif text-xl text-white/90">
-                  The Questline
-                </span>
-              </div>
-              <div class="flex space-x-6">
-                {navigationLinks.map((link) => (
+            {/* Navigation */}
+            <nav className="hidden md:flex justify-center border-t border-secondary/20 py-3 text-sm overflow-x-auto">
+              <div className="flex space-x-6">
+                {mainSections.map((section) => (
                   <a
-                    key={link.href}
-                    href={link.href}
-                    class="text-white/70 hover:text-accent-gold transition-colors text-sm"
+                    key={section.href}
+                    href={section.href}
+                    className="text-black/90 transition-colors whitespace-nowrap font-medium"
                   >
-                    {link.text}
+                    {section.text}
                   </a>
                 ))}
               </div>
-              <p class="text-white/70 text-sm">
-                © {new Date().getFullYear()} The Questline. All rights reserved.
-              </p>
+            </nav>
+          </div>
+        </header>
+
+        {/* Secondary navigation - game categories */}
+        <div className="border-b border-secondary/20 hidden md:block bg-background-light/30">
+          <div className="max-w-7xl mx-auto px-4">
+            <nav className="flex justify-center py-2 text-xs overflow-x-auto">
+              <div className="flex space-x-5">
+                {gameCategories.map((category) => (
+                  <a
+                    key={category.href}
+                    href={category.href}
+                    className="text-black/70 hover:text-accent-gold transition-colors whitespace-nowrap"
+                  >
+                    {category.text}
+                  </a>
+                ))}
+              </div>
+            </nav>
+          </div>
+        </div>
+
+        {/* Mobile Navigation is now moved into the masthead */}
+
+        <main className="py-4">
+          {children}
+        </main>
+
+        <footer className="mt-12 py-8 bg-background-light/30 backdrop-blur-sm border-t border-secondary/20">
+          <div className="max-w-7xl mx-auto px-4">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+              <div>
+                <h3 className="font-black text-lg mb-4 font-sans uppercase tracking-title text-black">
+                  CRITICO
+                </h3>
+                <p className="text-sm text-black/70 mb-4">
+                  Grundige og nuancerede kritikker af videospil med fokus på
+                  fortællestrukturer, spiloplevelser og spilmekanikker.
+                </p>
+                <p className="text-sm text-black/90">
+                  © {new Date().getFullYear()}{" "}
+                  CRITICO. Alle rettigheder forbeholdes.
+                </p>
+              </div>
+
+              <div>
+                <h4 className="font-bold mb-3 text-sm text-black">
+                  Navigation
+                </h4>
+                <ul className="space-y-2">
+                  {mainSections.map((link) => (
+                    <li key={link.href}>
+                      <a
+                        href={link.href}
+                        className="text-sm text-black/70 hover:text-accent-gold transition-colors"
+                      >
+                        {link.text}
+                      </a>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+
+              <div>
+                <h4 className="font-bold mb-3 text-sm text-black">Følg Os</h4>
+                <ul className="space-y-2">
+                  <li>
+                    <a
+                      href="#"
+                      className="text-sm text-black/70 hover:text-accent-gold transition-colors"
+                    >
+                      Twitter
+                    </a>
+                  </li>
+                  <li>
+                    <a
+                      href="#"
+                      className="text-sm text-black/70 hover:text-accent-gold transition-colors"
+                    >
+                      YouTube
+                    </a>
+                  </li>
+                  <li>
+                    <a
+                      href="#"
+                      className="text-sm text-black/70 hover:text-accent-gold transition-colors"
+                    >
+                      Instagram
+                    </a>
+                  </li>
+                  <li>
+                    <a
+                      href="#"
+                      className="text-sm text-black/70 hover:text-accent-gold transition-colors"
+                    >
+                      Discord
+                    </a>
+                  </li>
+                </ul>
+              </div>
             </div>
           </div>
         </footer>

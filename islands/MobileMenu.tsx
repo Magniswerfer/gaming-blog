@@ -15,46 +15,79 @@ export default function MobileMenu({ links }: MobileMenuProps) {
   };
 
   return (
-    <div class="md:hidden">
+    <div>
       {/* Hamburger Button */}
       <button
         onClick={toggleMenu}
-        class="flex flex-col justify-center items-center w-10 h-10 space-y-1.5 text-white focus:outline-none"
+        className="flex items-center justify-center focus:outline-none"
         aria-label={isOpen ? "Close menu" : "Open menu"}
       >
-        <span
-          class={`block w-6 h-0.5 bg-white transition-transform duration-300 ${
-            isOpen ? "transform rotate-45 translate-y-2" : ""
-          }`}
-        />
-        <span
-          class={`block w-6 h-0.5 bg-white transition-opacity duration-300 ${
-            isOpen ? "opacity-0" : "opacity-100"
-          }`}
-        />
-        <span
-          class={`block w-6 h-0.5 bg-white transition-transform duration-300 ${
-            isOpen ? "transform -rotate-45 -translate-y-2" : ""
-          }`}
-        />
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke-width="1.5"
+          stroke="currentColor"
+          className="w-6 h-6"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5"
+          />
+        </svg>
       </button>
 
       {/* Mobile Menu Overlay */}
       <div
-        class={`fixed top-[76px] left-0 right-0 bottom-0 bg-black/50 z-[100] transition-transform duration-300 transform ${
-          isOpen ? "translate-x-0" : "translate-x-full"
+        className={`fixed inset-0 z-50 bg-background-light transition-opacity duration-300 ${
+          isOpen ? "opacity-100" : "opacity-0 pointer-events-none"
         }`}
       >
-        <div class="flex flex-col h-full">
-          <nav class="flex-1 bg-background-dark">
-            <ul class="flex flex-col items-center w-full pt-8 pb-24">
+        <div className="container mx-auto px-4 py-6">
+          <div className="flex justify-between items-center mb-6 border-b border-secondary/20 pb-4">
+            <a
+              href="/"
+              className="hover:no-underline"
+              onClick={() => setIsOpen(false)}
+            >
+              <div className="font-sans font-black text-2xl uppercase tracking-title text-black">
+                CRITICO
+              </div>
+            </a>
+            <button
+              onClick={toggleMenu}
+              className="text-black focus:outline-none"
+              aria-label="Close menu"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke-width="1.5"
+                stroke="currentColor"
+                className="w-6 h-6"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  d="M6 18L18 6M6 6l12 12"
+                />
+              </svg>
+            </button>
+          </div>
+
+          <nav>
+            <ul className="space-y-4">
               {links.map((link) => (
-                <li key={link.href} class="w-full text-center">
+                <li
+                  key={link.href}
+                  className="border-b border-secondary/20 pb-3"
+                >
                   <a
                     href={link.href}
-                    class="font-serif text-2xl text-white hover:text-accent-gold transition-colors block py-6"
-                    onClick={() =>
-                      setIsOpen(false)}
+                    className="text-xl text-black hover:text-accent-gold transition-colors font-serif block"
+                    onClick={() => setIsOpen(false)}
                   >
                     {link.text}
                   </a>
@@ -62,6 +95,38 @@ export default function MobileMenu({ links }: MobileMenuProps) {
               ))}
             </ul>
           </nav>
+
+          <div className="mt-8 pt-4 border-t border-secondary/20">
+            <div className="space-y-4">
+              <h3 className="text-xs font-bold uppercase tracking-wider mb-2 text-black">
+                Følg Os
+              </h3>
+              <a
+                href="#"
+                className="block text-black/70 hover:text-accent-gold transition-colors text-sm"
+              >
+                Twitter
+              </a>
+              <a
+                href="#"
+                className="block text-black/70 hover:text-accent-gold transition-colors text-sm"
+              >
+                YouTube
+              </a>
+              <a
+                href="#"
+                className="block text-black/70 hover:text-accent-gold transition-colors text-sm"
+              >
+                Instagram
+              </a>
+              <a
+                href="#"
+                className="block text-black/70 hover:text-accent-gold transition-colors text-sm"
+              >
+                Discord
+              </a>
+            </div>
+          </div>
         </div>
       </div>
     </div>

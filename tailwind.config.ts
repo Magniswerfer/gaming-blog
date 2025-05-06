@@ -1,4 +1,5 @@
 import { type Config } from "tailwindcss";
+import type { PluginAPI } from "tailwindcss/types/config";
 
 export default {
   content: [
@@ -7,23 +8,45 @@ export default {
   theme: {
     extend: {
       colors: {
-        primary: {
-          DEFAULT: "#355C7D",
-          dark: "#1F4E5F",
-        },
+        primary: "#355C7D",
+        secondary: "#1F4E5F",
         accent: {
           gold: "#F5D76E",
           earth: "#A07A3B",
         },
+        black: "#1A1A1A",
+        white: "#FAFAF8",
         background: {
-          light: "#2E2E2E",
-          dark: "#1E1E1E",
+          light: "#FAFAF8",
+          dark: "#F0F0ED",
         },
       },
       fontFamily: {
-        serif: ["Merriweather", "Playfair Display", "serif"],
-        sans: ["Lato", "Inter", "sans-serif"],
+        heading: ["Inter", "sans-serif"],
+        title: ["Inter", "sans-serif"],
+        sans: ["Inter", "sans-serif"],
+      },
+      letterSpacing: {
+        title: "0.2em",
+      },
+      textDecorationThickness: {
+        DEFAULT: "0.5px",
+      },
+      textUnderlineOffset: {
+        DEFAULT: "2px",
       },
     },
   },
+  plugins: [
+    function ({ addBase }: PluginAPI) {
+      addBase({
+        "a": {
+          "@apply transition-colors": {},
+        },
+        "a:hover": {
+          "@apply underline": {},
+        },
+      });
+    },
+  ],
 } satisfies Config;

@@ -4,14 +4,18 @@
 
 import * as $_404 from "./routes/_404.tsx";
 import * as $_app from "./routes/_app.tsx";
-import * as $about from "./routes/about.tsx";
+import * as $anmeldelser_slug_ from "./routes/anmeldelser/[slug].tsx";
+import * as $anmeldelser_index from "./routes/anmeldelser/index.tsx";
 import * as $api_gaming_news from "./routes/api/gaming-news.ts";
+import * as $api_igdb from "./routes/api/igdb.ts";
 import * as $api_joke from "./routes/api/joke.ts";
-import * as $blog from "./routes/blog.tsx";
-import * as $blog_slug_ from "./routes/blog/[slug].tsx";
-import * as $greet_name_ from "./routes/greet/[name].tsx";
+import * as $debat_slug_ from "./routes/debat/[slug].tsx";
+import * as $debat_index from "./routes/debat/index.tsx";
+import * as $features_slug_ from "./routes/features/[slug].tsx";
+import * as $features_index from "./routes/features/index.tsx";
 import * as $index from "./routes/index.tsx";
-import * as $news from "./routes/news.tsx";
+import * as $nyheder from "./routes/nyheder.tsx";
+import * as $om from "./routes/om.tsx";
 import * as $Counter from "./islands/Counter.tsx";
 import * as $FeaturedGameNews from "./islands/FeaturedGameNews.tsx";
 import * as $MobileMenu from "./islands/MobileMenu.tsx";
@@ -21,14 +25,18 @@ const manifest = {
   routes: {
     "./routes/_404.tsx": $_404,
     "./routes/_app.tsx": $_app,
-    "./routes/about.tsx": $about,
+    "./routes/anmeldelser/[slug].tsx": $anmeldelser_slug_,
+    "./routes/anmeldelser/index.tsx": $anmeldelser_index,
     "./routes/api/gaming-news.ts": $api_gaming_news,
+    "./routes/api/igdb.ts": $api_igdb,
     "./routes/api/joke.ts": $api_joke,
-    "./routes/blog.tsx": $blog,
-    "./routes/blog/[slug].tsx": $blog_slug_,
-    "./routes/greet/[name].tsx": $greet_name_,
+    "./routes/debat/[slug].tsx": $debat_slug_,
+    "./routes/debat/index.tsx": $debat_index,
+    "./routes/features/[slug].tsx": $features_slug_,
+    "./routes/features/index.tsx": $features_index,
     "./routes/index.tsx": $index,
-    "./routes/news.tsx": $news,
+    "./routes/nyheder.tsx": $nyheder,
+    "./routes/om.tsx": $om,
   },
   islands: {
     "./islands/Counter.tsx": $Counter,

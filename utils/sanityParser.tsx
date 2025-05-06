@@ -91,7 +91,7 @@ export function parseContent(content: BlockContent[]): JSX.Element[] {
         }
 
         currentList.push(
-          <li key={block._key || index} class="ml-6 mb-2 text-white/90">
+          <li key={block._key || index} class="ml-6 mb-2 text-black">
             {block.children?.map((child, idx) =>
               renderTextContent(child, idx, block.markDefs)
             )}
@@ -115,7 +115,7 @@ export function parseContent(content: BlockContent[]): JSX.Element[] {
             result.push(
               <h2
                 key={block._key || index}
-                class="font-serif text-3xl text-white mb-6"
+                class="font-serif text-3xl text-black mb-6"
               >
                 {block.children?.map((child, idx) =>
                   renderTextContent(child, idx, block.markDefs)
@@ -128,7 +128,7 @@ export function parseContent(content: BlockContent[]): JSX.Element[] {
             result.push(
               <h3
                 key={block._key || index}
-                class="font-serif text-2xl text-white mb-4"
+                class="font-serif text-2xl text-black mb-4"
               >
                 {block.children?.map((child, idx) =>
                   renderTextContent(child, idx, block.markDefs)
@@ -141,7 +141,7 @@ export function parseContent(content: BlockContent[]): JSX.Element[] {
             result.push(
               <p
                 key={block._key || index}
-                class="text-white/90 mb-6 leading-relaxed"
+                class="text-black mb-6 leading-relaxed"
               >
                 {block.children?.map((child, idx) =>
                   renderTextContent(child, idx, block.markDefs)

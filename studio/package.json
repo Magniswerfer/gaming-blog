@@ -16,9 +16,12 @@
   ],
   "dependencies": {
     "@sanity/vision": "^3.85.1",
+    "@types/lodash.debounce": "^4.0.9",
+    "lodash.debounce": "^4.0.8",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "sanity": "^3.85.1",
+    "sanity-plugin-json-input": "^0.1.0",
     "styled-components": "^6.1.15"
   },
   "devDependencies": {
