@@ -34,6 +34,19 @@ export default defineType({
             },
         }),
         defineField({
+            name: "underrubrik",
+            title: "Underrubrik",
+            type: "string",
+            description: "En kort underrubrik til anmeldelsen",
+        }),
+        defineField({
+            name: "resume",
+            title: "Resumé",
+            type: "text",
+            rows: 3,
+            description: "Et kort resumé af anmeldelsen",
+        }),
+        defineField({
             name: "rating",
             title: "Bedømmelse",
             type: "number",

@@ -6,19 +6,22 @@ import * as $_404 from "./routes/_404.tsx";
 import * as $_app from "./routes/_app.tsx";
 import * as $anmeldelser_slug_ from "./routes/anmeldelser/[slug].tsx";
 import * as $anmeldelser_index from "./routes/anmeldelser/index.tsx";
-import * as $api_gaming_news from "./routes/api/gaming-news.ts";
 import * as $api_igdb from "./routes/api/igdb.ts";
 import * as $api_joke from "./routes/api/joke.ts";
+import * as $api_sanity_test from "./routes/api/sanity-test.ts";
+import * as $api_search from "./routes/api/search.ts";
 import * as $debat_slug_ from "./routes/debat/[slug].tsx";
 import * as $debat_index from "./routes/debat/index.tsx";
 import * as $features_slug_ from "./routes/features/[slug].tsx";
 import * as $features_index from "./routes/features/index.tsx";
 import * as $index from "./routes/index.tsx";
-import * as $nyheder from "./routes/nyheder.tsx";
+import * as $nyhed_slug_ from "./routes/nyhed/[slug].tsx";
+import * as $nyhed_index from "./routes/nyhed/index.tsx";
 import * as $om from "./routes/om.tsx";
-import * as $Counter from "./islands/Counter.tsx";
-import * as $FeaturedGameNews from "./islands/FeaturedGameNews.tsx";
+import * as $search from "./routes/search.tsx";
 import * as $MobileMenu from "./islands/MobileMenu.tsx";
+import * as $SearchInput from "./islands/SearchInput.tsx";
+import * as $SearchPage from "./islands/SearchPage.tsx";
 import type { Manifest } from "$fresh/server.ts";
 
 const manifest = {
@@ -27,21 +30,24 @@ const manifest = {
     "./routes/_app.tsx": $_app,
     "./routes/anmeldelser/[slug].tsx": $anmeldelser_slug_,
     "./routes/anmeldelser/index.tsx": $anmeldelser_index,
-    "./routes/api/gaming-news.ts": $api_gaming_news,
     "./routes/api/igdb.ts": $api_igdb,
     "./routes/api/joke.ts": $api_joke,
+    "./routes/api/sanity-test.ts": $api_sanity_test,
+    "./routes/api/search.ts": $api_search,
     "./routes/debat/[slug].tsx": $debat_slug_,
     "./routes/debat/index.tsx": $debat_index,
     "./routes/features/[slug].tsx": $features_slug_,
     "./routes/features/index.tsx": $features_index,
     "./routes/index.tsx": $index,
-    "./routes/nyheder.tsx": $nyheder,
+    "./routes/nyhed/[slug].tsx": $nyhed_slug_,
+    "./routes/nyhed/index.tsx": $nyhed_index,
     "./routes/om.tsx": $om,
+    "./routes/search.tsx": $search,
   },
   islands: {
-    "./islands/Counter.tsx": $Counter,
-    "./islands/FeaturedGameNews.tsx": $FeaturedGameNews,
     "./islands/MobileMenu.tsx": $MobileMenu,
+    "./islands/SearchInput.tsx": $SearchInput,
+    "./islands/SearchPage.tsx": $SearchPage,
   },
   baseUrl: import.meta.url,
 } satisfies Manifest;

@@ -34,10 +34,17 @@ export default defineType({
             },
         }),
         defineField({
-            name: "ingress",
-            title: "Manchet",
+            name: "underrubrik",
+            title: "Underrubrik",
+            type: "string",
+            description: "En kort underrubrik til nyheden",
+        }),
+        defineField({
+            name: "resume",
+            title: "Resumé",
             type: "text",
             rows: 3,
+            description: "Et kort resumé af nyheden",
         }),
         defineField({
             name: "isBreaking",

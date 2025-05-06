@@ -39,6 +39,13 @@ export default defineType({
             type: "string",
         }),
         defineField({
+            name: "resume",
+            title: "Resumé",
+            type: "text",
+            rows: 3,
+            description: "Et kort resumé af artiklen",
+        }),
+        defineField({
             name: "categories",
             title: "Kategorier",
             type: "array",

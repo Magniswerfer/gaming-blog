@@ -34,6 +34,12 @@ export default defineType({
             },
         }),
         defineField({
+            name: "underrubrik",
+            title: "Underrubrik",
+            type: "string",
+            description: "En kort underrubrik til debatindlægget",
+        }),
+        defineField({
             name: "summary",
             title: "Resumé",
             type: "text",

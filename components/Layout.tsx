@@ -1,6 +1,7 @@
 import { Head } from "$fresh/runtime.ts";
 import { ComponentChildren } from "preact";
 import MobileMenu from "../islands/MobileMenu.tsx";
+import SearchInput from "../islands/SearchInput.tsx";
 
 interface LayoutProps {
   children: ComponentChildren;
@@ -12,7 +13,8 @@ export default function Layout(
 ) {
   // Navigation sections with Danish labels
   const mainSections = [
-    { href: "/nyheder", text: "Nyheder" },
+    { href: "/", text: "Forside" },
+    { href: "/nyhed", text: "Nyheder" },
     { href: "/anmeldelser", text: "Anmeldelser" },
     { href: "/features", text: "Features" },
     { href: "/debat", text: "Debat" },
@@ -63,30 +65,36 @@ export default function Layout(
               <a href="/newsletter">
                 Nyhedsbrev
               </a>
-              <a href="/search">
-                Søg
-              </a>
+              <div className="w-32">
+                <SearchInput />
+              </div>
             </div>
           </div>
         </div>
 
         {/* Main masthead */}
-        <header className="bg-background-light backdrop-blur-sm border-b border-secondary/20 pt-4 pb-2">
+        <header className="bg-white border-b border-secondary/20 pt-4 pb-2">
           <div className="max-w-7xl mx-auto px-4">
-            <div className="relative flex justify-between items-center mb-4">
-              {/* Left side - Mobile menu */}
-              <div className="md:hidden z-10">
-                <MobileMenu links={mainSections} />
-              </div>
+            <div className="flex items-center justify-between mb-4">
+              {/* Left side - Empty spacer */}
+              <div className="w-10"></div>
 
               {/* Center - CRITICO title as a link */}
-              <div className="flex-1 text-center">
+              <div className="flex-grow text-center">
                 <a href="/" className="inline-block hover:no-underline">
-                  <h1 className="font-sans font-black text-4xl tracking-title uppercase text-black">
+                  <h1 className="font-sans font-black text-2xl md:text-4xl lg:text-6xl tracking-title uppercase text-black">
                     CRITICO
                   </h1>
                 </a>
               </div>
+
+              {/* Right side - Mobile menu */}
+              <div className="md:hidden z-10 w-10 flex items-center justify-end">
+                <MobileMenu links={mainSections} />
+              </div>
+
+              {/* Empty div for desktop */}
+              <div className="hidden md:block w-10"></div>
             </div>
 
             {/* Navigation */}
@@ -107,7 +115,7 @@ export default function Layout(
         </header>
 
         {/* Secondary navigation - game categories */}
-        <div className="border-b border-secondary/20 hidden md:block bg-background-light/30">
+        <div className="border-b border-secondary/20 hidden md:block bg-white">
           <div className="max-w-7xl mx-auto px-4">
             <nav className="flex justify-center py-2 text-xs overflow-x-auto">
               <div className="flex space-x-5">
@@ -131,7 +139,7 @@ export default function Layout(
           {children}
         </main>
 
-        <footer className="mt-12 py-8 bg-background-light/30 backdrop-blur-sm border-t border-secondary/20">
+        <footer className="mt-12 py-8 bg-white border-t border-secondary/20">
           <div className="max-w-7xl mx-auto px-4">
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
               <div>
