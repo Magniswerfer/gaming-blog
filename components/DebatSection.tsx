@@ -10,15 +10,15 @@ interface DebatEntry {
   };
 }
 
-interface DebatSectionProps {
+interface DebatSidebarProps {
   entries: DebatEntry[];
   className?: string;
 }
 
-export default function DebatSection({
+export default function DebatSidebar({
   entries,
   className = "",
-}: DebatSectionProps): JSX.Element {
+}: DebatSidebarProps): JSX.Element {
   return (
     <div className={`${className}`}>
       <div className="flex justify-between items-center mb-3 border-b border-secondary/20 pb-2">

@@ -1,63 +1,60 @@
-import GameCard from "./GameCard.tsx";
+import { getGameCoverImage } from "../utils/gameUtils.ts";
 
 interface Game {
   title: string;
-  image: string;
-  description: string;
+  teaserText: string;
+  game?: {
+    title: string;
+    gameJson: string;
+  };
 }
 
 interface UpcomingGamesProps {
   games: Game[];
   title?: string;
-  subtitle?: string;
 }
 
 export default function UpcomingGames({
   games,
-  title = "Kommende Spil",
-  subtitle = "De spil vi glæder os til",
+  title = "Mest Ventede Spil",
 }: UpcomingGamesProps) {
   return (
-    <section className="w-full bg-background-light py-16">
-      <div className="max-w-7xl mx-auto px-6">
-        <div className="mb-10">
-          <h2 className="font-heading font-black tracking-heading text-4xl text-black mb-2">
-            {title}
-          </h2>
-          <p className="text-black/80 text-xl">{subtitle}</p>
-        </div>
+    <div className="mb-8 border-b border-secondary/20 pb-6">
+      <h3 className="text-xs font-bold uppercase tracking-wider mb-4 border-b border-secondary/20 pb-2">
+        {title}
+      </h3>
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        {games.map((game, index) => {
+          const coverImage = game.game?.gameJson
+            ? getGameCoverImage(game.game.gameJson)
+            : "https://images.unsplash.com/photo-1542751371-adc38448a05e?w=800&auto=format&fit=crop&q=60";
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-          {games.map((game) => (
-            <div
-              key={game.title}
-              className="flex flex-col bg-background-dark rounded-xl border border-secondary/20 hover:border-accent-gold/50 transition-all overflow-hidden"
+          return (
+            <article
+              key={index}
+              className="mb-2 flex flex-col max-w-[220px] bg-white border border-black p-4"
             >
-              <div className="relative aspect-video w-full overflow-hidden">
-                <img
-                  src={game.image}
-                  alt={game.title}
-                  className="w-full h-full object-cover"
-                />
-                <div className="absolute bottom-0 w-full bg-primary/80 backdrop-blur-sm p-3">
-                  <h3 className="font-heading font-bold text-lg text-white">
-                    {game.title}
+              <div className="flex mb-2">
+                <div className="mr-3 w-24 aspect-[3/4] relative overflow-hidden flex-shrink-0">
+                  <img
+                    src={coverImage}
+                    alt={game.title || game.game?.title || ""}
+                    className="w-full h-full object-cover absolute inset-0"
+                  />
+                </div>
+                <div className="flex-grow flex items-center">
+                  <h3 className="font-bold text-base leading-tight">
+                    {game.title || game.game?.title || ""}
                   </h3>
                 </div>
               </div>
-
-              <div className="p-5">
-                <h4 className="text-accent-earth font-medium text-sm uppercase mb-2">
-                  Hvorfor vi glæder os
-                </h4>
-                <p className="text-black">
-                  {game.description}
-                </p>
-              </div>
-            </div>
-          ))}
-        </div>
+              <p className="text-xs text-gray-600">
+                {game.teaserText}
+              </p>
+            </article>
+          );
+        })}
       </div>
-    </section>
+    </div>
   );
 }

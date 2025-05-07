@@ -1,6 +1,6 @@
 import { Handlers, PageProps } from "$fresh/server.ts";
 import { client } from "../../utils/sanity.ts";
-import ContentPage from "../../components/ContentPage.tsx";
+import CollectionPage from "../../components/CollectionPage.tsx";
 
 // Define TypeScript interfaces for our data
 interface Author {
@@ -72,7 +72,7 @@ export default function Anmeldelser(
   const { reviews, error } = data;
 
   return (
-    <ContentPage
+    <CollectionPage
       title="Anmeldelser"
       description="Grundige vurderinger af de nyeste og mest interessante spil på markedet."
       items={reviews}

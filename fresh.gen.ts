@@ -7,7 +7,6 @@ import * as $_app from "./routes/_app.tsx";
 import * as $anmeldelser_slug_ from "./routes/anmeldelser/[slug].tsx";
 import * as $anmeldelser_index from "./routes/anmeldelser/index.tsx";
 import * as $api_igdb from "./routes/api/igdb.ts";
-import * as $api_joke from "./routes/api/joke.ts";
 import * as $api_sanity_test from "./routes/api/sanity-test.ts";
 import * as $api_search from "./routes/api/search.ts";
 import * as $debat_slug_ from "./routes/debat/[slug].tsx";
@@ -31,7 +30,6 @@ const manifest = {
     "./routes/anmeldelser/[slug].tsx": $anmeldelser_slug_,
     "./routes/anmeldelser/index.tsx": $anmeldelser_index,
     "./routes/api/igdb.ts": $api_igdb,
-    "./routes/api/joke.ts": $api_joke,
     "./routes/api/sanity-test.ts": $api_sanity_test,
     "./routes/api/search.ts": $api_search,
     "./routes/debat/[slug].tsx": $debat_slug_,

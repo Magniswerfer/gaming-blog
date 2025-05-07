@@ -1,5 +1,5 @@
 import blockContent from "./blockContent.ts";
-import category from "./category.ts";
+import kategori from "./kategori.ts";
 import author from "./author.ts";
 import anmeldelse from "./anmeldelse.ts";
 import debat from "./debat.ts";
@@ -10,7 +10,7 @@ import mestVentedeSpil from "./mestVentedeSpil.ts";
 
 export const schemaTypes = [
     author,
-    category,
+    kategori,
     blockContent,
     anmeldelse,
     debat,

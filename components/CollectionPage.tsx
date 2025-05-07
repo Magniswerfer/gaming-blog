@@ -1,6 +1,6 @@
 import { JSX } from "preact";
 import Layout from "./Layout.tsx";
-import ContentCard from "./ContentCard.tsx";
+import ArticleCard from "./ArticleCard.tsx";
 
 interface ContentItem {
   _id: string;
@@ -36,6 +36,7 @@ interface CollectionPageProps {
   layout?: "grid" | "list" | "featured";
   emptyMessage?: string;
   showExcerpt?: boolean;
+  imageWidth?: "1/4" | "1/3" | "1/2";
 }
 
 export default function CollectionPage({
@@ -46,6 +47,7 @@ export default function CollectionPage({
   layout = "grid",
   emptyMessage = "Ingen indhold tilgængeligt i øjeblikket. Kom tilbage senere.",
   showExcerpt = true,
+  imageWidth = "1/3",
 }: CollectionPageProps): JSX.Element {
   // For featured layout, we need to split into featured item and the rest
   const featuredItem = layout === "featured" && items.length > 0
@@ -154,7 +156,7 @@ export default function CollectionPage({
               {layout === "grid" && (
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-12">
                   {items.map((item) => (
-                    <ContentCard
+                    <ArticleCard
                       key={item._id}
                       content={{
                         _type: item._type,
@@ -187,7 +189,7 @@ export default function CollectionPage({
                       <article class="flex flex-col md:flex-row gap-6 pb-8 transition-colors hover:bg-background-light/5">
                         {item.mainImage?.asset?.url
                           ? (
-                            <div class="md:w-1/3 overflow-hidden">
+                            <div class={`md:w-${imageWidth} overflow-hidden`}>
                               <div class="overflow-hidden">
                                 <img
                                   src={item.mainImage.asset.url}
@@ -198,7 +200,13 @@ export default function CollectionPage({
                             </div>
                           )
                           : null}
-                        <div class="md:w-2/3 flex flex-col">
+                        <div
+                          class={`md:w-${
+                            imageWidth === "1/2"
+                              ? "1/2"
+                              : (imageWidth === "1/4" ? "3/4" : "2/3")
+                          } flex flex-col`}
+                        >
                           <div>
                             <h2 class="font-sans font-bold text-2xl md:text-3xl mb-2 leading-tight">
                               <span class="text-black group-hover:underline">
@@ -265,7 +273,7 @@ export default function CollectionPage({
               {layout === "featured" && remainingItems.length > 0 && (
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-12">
                   {remainingItems.map((item) => (
-                    <ContentCard
+                    <ArticleCard
                       key={item._id}
                       content={{
                         _type: item._type,

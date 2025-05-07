@@ -53,10 +53,10 @@ export default defineType({
             initialValue: false,
         }),
         defineField({
-            name: "categories",
+            name: "kategorier",
             title: "Kategorier",
             type: "array",
-            of: [{ type: "reference", to: { type: "category" } }],
+            of: [{ type: "reference", to: { type: "kategori" } }],
         }),
         defineField({
             name: "publishedAt",

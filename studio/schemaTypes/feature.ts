@@ -46,10 +46,10 @@ export default defineType({
             description: "Et kort resumé af artiklen",
         }),
         defineField({
-            name: "categories",
+            name: "kategorier",
             title: "Kategorier",
             type: "array",
-            of: [{ type: "reference", to: { type: "category" } }],
+            of: [{ type: "reference", to: { type: "kategori" } }],
         }),
         defineField({
             name: "publishedAt",

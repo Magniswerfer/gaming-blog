@@ -1,5 +1,5 @@
 import { client } from "../../utils/sanity.ts";
-import ContentPage from "../../components/ContentPage.tsx";
+import CollectionPage from "../../components/CollectionPage.tsx";
 import { Handlers, PageProps } from "$fresh/server.ts";
 
 interface Debat {
@@ -21,6 +21,27 @@ interface Debat {
   }>;
   summary?: string;
   underrubrik?: string;
+}
+
+// Interface for passing data to CollectionPage - excludes underrubrik
+interface DebatDisplayItem {
+  _id: string;
+  _type: string;
+  title: string;
+  slug: { current: string };
+  publishedAt: string;
+  author?: {
+    name: string;
+  };
+  mainImage?: {
+    asset: {
+      url: string;
+    };
+  };
+  categories?: Array<{
+    title: string;
+  }>;
+  summary?: string;
 }
 
 export const handler: Handlers<{ debats: Debat[]; error?: string }> = {
@@ -57,13 +78,19 @@ export default function DebatIndex(
 ) {
   const { debats, error } = data;
 
+  // Transform debats to exclude underrubrik field before passing to CollectionPage
+  const displayItems: DebatDisplayItem[] = debats.map((
+    { underrubrik, ...rest },
+  ) => rest);
+
   return (
-    <ContentPage
+    <CollectionPage
       title="Debat"
       description="Meninger, diskussioner og kritiske perspektiver på spil og spilkultur."
-      items={debats}
+      items={displayItems}
       error={error}
       layout="list"
+      imageWidth="1/4"
       emptyMessage="Der er i øjeblikket ingen debatindlæg. Kom tilbage snart for tankevækkende diskussioner om spil og spilkultur."
     />
   );

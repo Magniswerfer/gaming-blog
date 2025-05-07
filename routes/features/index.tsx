@@ -1,5 +1,5 @@
 import { client } from "../../utils/sanity.ts";
-import ContentPage from "../../components/ContentPage.tsx";
+import CollectionPage from "../../components/CollectionPage.tsx";
 import { Handlers, PageProps } from "$fresh/server.ts";
 
 interface Feature {
@@ -62,7 +62,7 @@ export default function FeaturesIndex(
   const { features, error } = data;
 
   return (
-    <ContentPage
+    <CollectionPage
       title="Features"
       description="Dybdegående artikler om spil, spilkultur og spilbranchens tendenser."
       items={features}

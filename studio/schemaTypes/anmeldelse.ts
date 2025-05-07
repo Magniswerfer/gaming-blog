@@ -36,14 +36,15 @@ export default defineType({
         defineField({
             name: "underrubrik",
             title: "Underrubrik",
-            type: "string",
+            type: "text",
+            rows: 2,
             description: "En kort underrubrik til anmeldelsen",
         }),
         defineField({
             name: "resume",
             title: "Resumé",
             type: "text",
-            rows: 3,
+            rows: 2,
             description: "Et kort resumé af anmeldelsen",
         }),
         defineField({
@@ -53,6 +54,13 @@ export default defineType({
             validation: (Rule) => Rule.min(0).max(10).precision(1),
         }),
         defineField({
+            name: "ratingText",
+            title: "Karakter tekst",
+            type: "text",
+            rows: 3,
+            description: "En kort tekst der beskriver bedømmelsen",
+        }),
+        defineField({
             name: "gameData",
             title: "Spil information",
             type: "reference",
@@ -60,10 +68,10 @@ export default defineType({
             description: "Reference til spillets data fra IGDB",
         }),
         defineField({
-            name: "categories",
+            name: "kategorier",
             title: "Kategorier",
             type: "array",
-            of: [{ type: "reference", to: { type: "category" } }],
+            of: [{ type: "reference", to: { type: "kategori" } }],
         }),
         defineField({
             name: "publishedAt",

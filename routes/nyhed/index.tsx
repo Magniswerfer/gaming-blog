@@ -1,5 +1,5 @@
 import { Handlers, PageProps } from "$fresh/server.ts";
-import ContentPage from "../../components/ContentPage.tsx";
+import CollectionPage from "../../components/CollectionPage.tsx";
 import { client } from "../../utils/sanity.ts";
 
 interface Nyhed {
@@ -56,7 +56,7 @@ export default function NyhederPage({ data }: PageProps<NyhederData>) {
   const { nyheder, error } = data;
 
   return (
-    <ContentPage
+    <CollectionPage
       title="Nyheder"
       description="De seneste nyheder fra spilindustrien, udgivelser og andre begivenheder."
       items={nyheder}
