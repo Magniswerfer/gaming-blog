@@ -6,6 +6,7 @@ import * as $_404 from "./routes/_404.tsx";
 import * as $_app from "./routes/_app.tsx";
 import * as $anmeldelser_slug_ from "./routes/anmeldelser/[slug].tsx";
 import * as $anmeldelser_index from "./routes/anmeldelser/index.tsx";
+import * as $api_categories from "./routes/api/categories.ts";
 import * as $api_igdb from "./routes/api/igdb.ts";
 import * as $api_sanity_test from "./routes/api/sanity-test.ts";
 import * as $api_search from "./routes/api/search.ts";
@@ -14,10 +15,12 @@ import * as $debat_index from "./routes/debat/index.tsx";
 import * as $features_slug_ from "./routes/features/[slug].tsx";
 import * as $features_index from "./routes/features/index.tsx";
 import * as $index from "./routes/index.tsx";
+import * as $kategorier_slug_ from "./routes/kategorier/[slug].tsx";
 import * as $nyhed_slug_ from "./routes/nyhed/[slug].tsx";
 import * as $nyhed_index from "./routes/nyhed/index.tsx";
 import * as $om from "./routes/om.tsx";
 import * as $search from "./routes/search.tsx";
+import * as $CategoryNav from "./islands/CategoryNav.tsx";
 import * as $MobileMenu from "./islands/MobileMenu.tsx";
 import * as $SearchInput from "./islands/SearchInput.tsx";
 import * as $SearchPage from "./islands/SearchPage.tsx";
@@ -29,6 +32,7 @@ const manifest = {
     "./routes/_app.tsx": $_app,
     "./routes/anmeldelser/[slug].tsx": $anmeldelser_slug_,
     "./routes/anmeldelser/index.tsx": $anmeldelser_index,
+    "./routes/api/categories.ts": $api_categories,
     "./routes/api/igdb.ts": $api_igdb,
     "./routes/api/sanity-test.ts": $api_sanity_test,
     "./routes/api/search.ts": $api_search,
@@ -37,12 +41,14 @@ const manifest = {
     "./routes/features/[slug].tsx": $features_slug_,
     "./routes/features/index.tsx": $features_index,
     "./routes/index.tsx": $index,
+    "./routes/kategorier/[slug].tsx": $kategorier_slug_,
     "./routes/nyhed/[slug].tsx": $nyhed_slug_,
     "./routes/nyhed/index.tsx": $nyhed_index,
     "./routes/om.tsx": $om,
     "./routes/search.tsx": $search,
   },
   islands: {
+    "./islands/CategoryNav.tsx": $CategoryNav,
     "./islands/MobileMenu.tsx": $MobileMenu,
     "./islands/SearchInput.tsx": $SearchInput,
     "./islands/SearchPage.tsx": $SearchPage,

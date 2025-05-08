@@ -99,13 +99,16 @@ export default function ArticleSidebar({
 
       <div className="border-b border-secondary/20 pb-3">
         {sortedItems.map((item, index) => (
-          <div
-            key={item.slug.current}
-            className={`${showImage ? "flex items-start" : ""} mb-3 ${
+          <a
+            href={getItemUrl(item)}
+            className={`block hover:no-underline group ${
+              showImage ? "flex items-start" : ""
+            } mb-3 ${
               index < sortedItems.length - 1
                 ? "pb-3 border-b border-secondary/10"
                 : ""
             }`}
+            key={item.slug.current}
           >
             {showImage && (
               item.mainImage?.asset?.url
@@ -145,12 +148,9 @@ export default function ArticleSidebar({
 
             <div className="flex-grow">
               <h3 className="font-bold text-base mb-1 leading-tight">
-                <a
-                  href={getItemUrl(item)}
-                  className="text-black transition-colors"
-                >
+                <span className="text-black group-hover:underline">
                   {item.title}
-                </a>
+                </span>
                 {!showImage && item.isBreaking && (
                   <span className="ml-2 bg-red-600 text-white px-1 py-0.5 text-xs font-bold inline-block">
                     BREAKING
@@ -179,7 +179,7 @@ export default function ArticleSidebar({
                 )}
               </div>
             </div>
-          </div>
+          </a>
         ))}
       </div>
     </div>

@@ -2,6 +2,7 @@ import { Head } from "$fresh/runtime.ts";
 import { ComponentChildren } from "preact";
 import MobileMenu from "../islands/MobileMenu.tsx";
 import SearchInput from "../islands/SearchInput.tsx";
+import CategoryNav from "../islands/CategoryNav.tsx";
 
 interface LayoutProps {
   children: ComponentChildren;
@@ -19,23 +20,6 @@ export default function Layout(
     { href: "/features", text: "Features" },
     { href: "/debat", text: "Debat" },
     { href: "/om", text: "Om" },
-  ];
-
-  const gameCategories = [
-    { href: "/category/rpg", text: "RPG" },
-    { href: "/category/action", text: "Action" },
-    { href: "/category/adventure", text: "Adventure" },
-    { href: "/category/strategy", text: "Strategy" },
-    { href: "/category/simulation", text: "Simulation" },
-    { href: "/category/sports", text: "Sports" },
-    { href: "/category/indie", text: "Indie" },
-  ];
-
-  const recommendationSections = [
-    { href: "/best-games", text: "Best Games" },
-    { href: "/upcoming", text: "Upcoming Games" },
-    { href: "/staff-picks", text: "Staff Picks" },
-    { href: "/hidden-gems", text: "Hidden Gems" },
   ];
 
   return (
@@ -114,26 +98,7 @@ export default function Layout(
           </div>
         </header>
 
-        {/* Secondary navigation - game categories */}
-        <div className="border-b border-secondary/20 hidden md:block bg-white">
-          <div className="max-w-7xl mx-auto px-4">
-            <nav className="flex justify-center py-2 text-xs overflow-x-auto">
-              <div className="flex space-x-5">
-                {gameCategories.map((category) => (
-                  <a
-                    key={category.href}
-                    href={category.href}
-                    className="text-black/70 hover:text-accent-gold transition-colors whitespace-nowrap"
-                  >
-                    {category.text}
-                  </a>
-                ))}
-              </div>
-            </nav>
-          </div>
-        </div>
-
-        {/* Mobile Navigation is now moved into the masthead */}
+        <CategoryNav />
 
         <main className="py-4">
           {children}
