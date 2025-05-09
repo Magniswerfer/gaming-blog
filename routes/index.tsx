@@ -178,27 +178,6 @@ export default function Home(
               items={editorsPicksContent}
               className="mb-8"
             />
-
-            {/* Nyhedsbrev tilmelding */}
-            <div className="p-4 bg-background-light/30 backdrop-blur-sm mb-8 rounded-lg">
-              <h3 className="font-sans font-black text-lg mb-2">
-                Spil Ugen
-              </h3>
-              <p className="text-sm text-black/80 mb-3">
-                Få vores kuraterede ugentlige oversigt over det bedste inden for
-                videospil, leveret direkte til din indbakke.
-              </p>
-              <form className="space-y-2">
-                <input
-                  type="email"
-                  placeholder="Din e-mailadresse"
-                  className="w-full px-3 py-2 border border-secondary/20 text-sm"
-                />
-                <button className="w-full bg-secondary hover:bg-accent-gold text-white py-2 text-sm font-medium transition-colors">
-                  Tilmeld
-                </button>
-              </form>
-            </div>
           </div>
         </div>
       </div>

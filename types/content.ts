@@ -40,5 +40,8 @@ export interface MestVentedeSpil {
   game: {
     title: string;
     gameJson: string;
+    slug?: {
+      current: string;
+    };
   };
 }

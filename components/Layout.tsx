@@ -48,9 +48,6 @@ export default function Layout(
               </span>
             </div>
             <div className="flex items-center space-x-4">
-              <a href="/newsletter">
-                Nyhedsbrev
-              </a>
               <div className="w-32">
                 <SearchInput />
               </div>

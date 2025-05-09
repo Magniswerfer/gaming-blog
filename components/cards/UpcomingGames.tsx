@@ -7,6 +7,9 @@ interface Game {
   game?: {
     title: string;
     gameJson: string;
+    slug?: {
+      current: string;
+    };
   };
 }
 
@@ -19,6 +22,28 @@ export default function UpcomingGames({
   games,
   title = "Mest Ventede Spil",
 }: UpcomingGamesProps) {
+  // Helper function to get game slug route
+  function getGameRoute(game: Game): string {
+    // If the game has a slug, use it
+    if (game.game?.slug?.current) {
+      return `/spil/${game.game.slug.current}`;
+    }
+
+    // Otherwise, generate a slug from the title
+    const gameTitle = game.game?.title || game.title;
+    if (gameTitle) {
+      // Create a slug from title (lowercase, remove special chars, replace spaces with hyphens)
+      const generatedSlug = gameTitle
+        .toLowerCase()
+        .replace(/[^\w\s-]/g, "")
+        .replace(/\s+/g, "-");
+
+      return `/spil/${generatedSlug}`;
+    }
+
+    return "#"; // Fallback if no title is available
+  }
+
   return (
     <div>
       <h3 className="text-xs font-bold uppercase tracking-wider">
@@ -31,32 +56,37 @@ export default function UpcomingGames({
             ? getGameCoverImage(game.game.gameJson, 192, 256)
             : getGameCoverImage("", 192, 256);
 
+          const gameLink = getGameRoute(game);
+
           return (
-            <article
+            <a
               key={index}
-              className="mb-2 flex flex-col max-w-[220px] bg-background-light border border-secondary/20 p-4"
+              href={gameLink}
+              className="no-underline hover:no-underline"
             >
-              <div className="flex mb-2">
-                <div className="mr-3 w-24 aspect-[3/4] relative overflow-hidden flex-shrink-0">
-                  <img
-                    src={coverImage}
-                    alt={game.title || game.game?.title || ""}
-                    className="w-full h-full object-cover absolute inset-0"
-                    width={192}
-                    height={256}
-                    loading="lazy"
-                  />
+              <article className="mb-2 flex flex-col max-w-[220px] bg-background-light border border-secondary/20 p-4 hover:shadow-md transition-shadow">
+                <div className="flex mb-2">
+                  <div className="mr-3 w-24 aspect-[3/4] relative overflow-hidden flex-shrink-0">
+                    <img
+                      src={coverImage}
+                      alt={game.title || game.game?.title || ""}
+                      className="w-full h-full object-cover absolute inset-0"
+                      width={192}
+                      height={256}
+                      loading="lazy"
+                    />
+                  </div>
+                  <div className="flex-grow flex items-center">
+                    <h3 className="font-bold text-base leading-tight hover:underline">
+                      {game.title || game.game?.title || ""}
+                    </h3>
+                  </div>
                 </div>
-                <div className="flex-grow flex items-center">
-                  <h3 className="font-bold text-base leading-tight">
-                    {game.title || game.game?.title || ""}
-                  </h3>
-                </div>
-              </div>
-              <p className="text-xs text-gray-600">
-                {game.teaserText}
-              </p>
-            </article>
+                <p className="text-xs text-gray-600">
+                  {game.teaserText}
+                </p>
+              </article>
+            </a>
           );
         })}
       </div>

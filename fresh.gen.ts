@@ -20,6 +20,7 @@ import * as $nyhed_slug_ from "./routes/nyhed/[slug].tsx";
 import * as $nyhed_index from "./routes/nyhed/index.tsx";
 import * as $om from "./routes/om.tsx";
 import * as $search from "./routes/search.tsx";
+import * as $spil_slug_ from "./routes/spil/[slug].tsx";
 import * as $CategoryNav from "./islands/CategoryNav.tsx";
 import * as $MobileMenu from "./islands/MobileMenu.tsx";
 import * as $SearchInput from "./islands/SearchInput.tsx";
@@ -46,6 +47,7 @@ const manifest = {
     "./routes/nyhed/index.tsx": $nyhed_index,
     "./routes/om.tsx": $om,
     "./routes/search.tsx": $search,
+    "./routes/spil/[slug].tsx": $spil_slug_,
   },
   islands: {
     "./islands/CategoryNav.tsx": $CategoryNav,

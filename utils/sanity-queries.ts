@@ -90,7 +90,8 @@ export async function getMestVentedeSpil(
       publishedAt,
       "game": game->{
         title,
-        gameJson
+        gameJson,
+        slug
       }
     }`,
   );
