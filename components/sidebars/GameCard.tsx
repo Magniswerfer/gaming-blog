@@ -6,7 +6,7 @@ interface GameCardProps {
 
 export default function GameCard({ title, image, description }: GameCardProps) {
   return (
-    <div class="flex-none w-72 bg-background-light/30 backdrop-blur-sm rounded-xl overflow-hidden border border-secondary/20">
+    <div class="flex-none w-72 bg-background-light/30 overflow-hidden border border-secondary/20">
       <div class="h-40 overflow-hidden">
         <img
           src={image}

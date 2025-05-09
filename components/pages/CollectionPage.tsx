@@ -1,6 +1,6 @@
 import { JSX } from "preact";
-import Layout from "./Layout.tsx";
-import ArticleCollection from "./ArticleCollection.tsx";
+import Layout from "../Layout.tsx";
+import ArticleCollection from "../sections/ArticleCollection.tsx";
 
 interface ContentItem {
   _id: string;

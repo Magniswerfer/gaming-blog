@@ -1,5 +1,6 @@
 import { JSX } from "preact";
-import { Content } from "../types/content.ts";
+import { Content } from "../../types/content.ts";
+import { getOptimizedImageUrl } from "../../utils/sanity.ts";
 
 interface ArticleCardProps {
   content: Content;
@@ -8,6 +9,7 @@ interface ArticleCardProps {
   showDate?: boolean;
   showAuthor?: boolean;
   className?: string;
+  horizontal?: boolean;
 }
 
 export default function ArticleCard({
@@ -17,6 +19,7 @@ export default function ArticleCard({
   showDate = true,
   showAuthor = true,
   className = "",
+  horizontal = false,
 }: ArticleCardProps): JSX.Element {
   // Helper function to get the excerpt text based on content type
   function getExcerptText(): string {
@@ -43,11 +46,21 @@ export default function ArticleCard({
     }
   }
 
+  // Image size dimensions based on the size prop
+  const imageDimensions = {
+    small: { width: horizontal ? 200 : 400, height: horizontal ? 150 : 200 },
+    medium: { width: 600, height: 300 },
+    large: { width: 1200, height: 675 },
+  };
+
+  // Get appropriate dimensions based on card size
+  const dimensions = imageDimensions[size];
+
   // Image size classes based on the size prop
   const imageSizes = {
     small: "h-20",
     medium: "h-48",
-    large: "h-64",
+    large: "aspect-[16/9]",
   };
 
   // Title size classes based on the size prop
@@ -66,9 +79,18 @@ export default function ArticleCard({
 
   return (
     <a href={getContentRoute()} className="block hover:no-underline group">
-      <article className={`flex flex-col ${className}`}>
+      <article
+        className={`${
+          horizontal && size === "small" ? "flex flex-row" : "flex flex-col"
+        } h-full ${className}`}
+      >
         {/* Content image with overlay elements */}
-        <div className="relative">
+        <div
+          className={`relative ${
+            horizontal && size === "small" ? "mr-3 flex-shrink-0" : ""
+          }`}
+          style={horizontal && size === "small" ? { width: "100px" } : {}}
+        >
           {/* Breaking news label */}
           {content.isBreaking && (
             <div className="bg-red-600 text-white px-2 py-1 text-xs font-bold absolute top-2 left-2 z-10">
@@ -84,20 +106,31 @@ export default function ArticleCard({
           )}
 
           {/* Content image */}
-          {content.mainImage?.asset?.url
+          {content.mainImage?.asset
             ? (
-              <div className={`overflow-hidden ${imageSizes[size]}`}>
+              <div
+                className={`overflow-hidden ${
+                  horizontal && size === "small" ? "h-full" : imageSizes[size]
+                }`}
+              >
                 <img
-                  src={content.mainImage.asset.url}
+                  src={getOptimizedImageUrl(
+                    content.mainImage,
+                    dimensions.width,
+                    dimensions.height,
+                  )}
                   alt={content.title}
                   className="w-full h-full object-cover"
+                  width={dimensions.width}
+                  height={dimensions.height}
+                  loading="lazy"
                 />
               </div>
             )
             : (
               <div
                 className={`overflow-hidden bg-secondary/10 flex items-center justify-center ${
-                  imageSizes[size]
+                  horizontal && size === "small" ? "h-full" : imageSizes[size]
                 }`}
               >
                 <span className="text-secondary/50 text-lg uppercase font-medium">
@@ -108,13 +141,17 @@ export default function ArticleCard({
         </div>
 
         {/* Content body - using flex-col and flex-grow to push byline to bottom */}
-        <div className="py-4 flex flex-col flex-grow">
-          <div>
+        <div
+          className={`${
+            horizontal && size === "small" ? "py-0" : "pt-4"
+          } flex flex-col flex-grow h-full`}
+        >
+          <div className="flex-grow flex flex-col">
             {/* Content title */}
             <h3
-              className={`font-sans font-bold ${
-                titleSizes[size]
-              } mb-2 leading-tight text-left`}
+              className={`font-sans font-bold ${titleSizes[size]} ${
+                horizontal && size === "small" ? "mb-1" : "mb-2"
+              } leading-tight text-left flex-shrink-0`}
             >
               <span className="text-black group-hover:underline">
                 {content.title}
@@ -124,8 +161,10 @@ export default function ArticleCard({
             {/* Content excerpt */}
             {showExcerpt && (
               <p
-                className={`font-serif text-black/80 mb-3 ${
-                  excerptSizes[size]
+                className={`font-serif text-black/80 ${
+                  horizontal && size === "small"
+                    ? "mb-1 sm:line-clamp-4 md:line-clamp-5 line-clamp-4 overflow-hidden text-xs"
+                    : `mb-3 ${excerptSizes[size]}`
                 } text-left`}
               >
                 {getExcerptText()}
@@ -134,7 +173,7 @@ export default function ArticleCard({
           </div>
 
           {/* Meta information: author and date - pushed to bottom with mt-auto */}
-          <div className="flex items-center justify-between text-xs text-black/60 mt-2">
+          <div className="flex items-center justify-between text-xs text-black/60 mt-auto flex-shrink-0">
             <div className="flex items-center gap-2 text-left">
               {showAuthor && content.author && (
                 <span>{content.author.name}</span>

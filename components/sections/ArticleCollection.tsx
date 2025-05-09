@@ -1,5 +1,5 @@
 import { JSX } from "preact";
-import ArticleCard from "./ArticleCard.tsx";
+import ArticleCard from "../cards/ArticleCard.tsx";
 
 interface ContentItem {
   _id: string;

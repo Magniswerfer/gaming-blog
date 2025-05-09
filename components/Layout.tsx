@@ -3,6 +3,8 @@ import { ComponentChildren } from "preact";
 import MobileMenu from "../islands/MobileMenu.tsx";
 import SearchInput from "../islands/SearchInput.tsx";
 import CategoryNav from "../islands/CategoryNav.tsx";
+import MainNav from "./navigation/MainNav.tsx";
+import Divider from "./misc/Divider.tsx";
 
 interface LayoutProps {
   children: ComponentChildren;
@@ -37,7 +39,7 @@ export default function Layout(
           <div className="max-w-7xl mx-auto px-4 py-1 flex justify-between items-center text-xs">
             <div className="flex items-center space-x-4">
               <span>
-                {new Date().toLocaleDateString("en-US", {
+                {new Date().toLocaleDateString("da-DK", {
                   weekday: "long",
                   month: "long",
                   day: "numeric",
@@ -57,7 +59,7 @@ export default function Layout(
         </div>
 
         {/* Main masthead */}
-        <header className="bg-white border-b border-secondary/20 pt-4 pb-2">
+        <header className="bg-white pt-4">
           <div className="max-w-7xl mx-auto px-4">
             <div className="flex items-center justify-between mb-4">
               {/* Left side - Empty spacer */}
@@ -82,29 +84,17 @@ export default function Layout(
             </div>
 
             {/* Navigation */}
-            <nav className="hidden md:flex justify-center border-t border-secondary/20 py-3 text-sm overflow-x-auto">
-              <div className="flex space-x-6">
-                {mainSections.map((section) => (
-                  <a
-                    key={section.href}
-                    href={section.href}
-                    className="text-black/90 transition-colors whitespace-nowrap font-medium"
-                  >
-                    {section.text}
-                  </a>
-                ))}
-              </div>
-            </nav>
+            <MainNav links={mainSections} />
           </div>
         </header>
-
+        <Divider spacing="no-space" />
         <CategoryNav />
 
         <main className="py-4">
           {children}
         </main>
-
-        <footer className="mt-12 py-8 bg-white border-t border-secondary/20">
+        <Divider spacing="no-space" className="mt-12 " />
+        <footer className="py-8 bg-white border-secondary/20">
           <div className="max-w-7xl mx-auto px-4">
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
               <div>

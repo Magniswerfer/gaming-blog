@@ -1,5 +1,5 @@
 import { getGameCoverImage } from "../../utils/gameUtils.ts";
-import Divider from "../Divider.tsx";
+import Divider from "../misc/Divider.tsx";
 
 interface Game {
   title: string;

@@ -1,12 +1,23 @@
-import { client } from "../utils/sanity.ts";
-import Divider from "./Divider.tsx";
+import { JSX } from "preact";
+import Divider from "../misc/Divider.tsx";
+import { client } from "../../utils/sanity.ts";
+import ArticleSidebar from "./ArticleSidebar.tsx";
 
 // Define TypeScript interfaces for our data
 interface ArticleBase {
   _id: string;
+  _type?: string;
   title: string;
   slug: { current: string };
   publishedAt: string;
+  mainImage?: {
+    asset: any;
+  };
+  summary?: string;
+  resume?: string;
+  author?: {
+    name: string;
+  };
 }
 
 interface Props {
@@ -14,6 +25,8 @@ interface Props {
   currentId: string;
   limit?: number;
   relatedArticles?: ArticleBase[];
+  showImage?: boolean;
+  className?: string;
 }
 
 // Map of article types to their routes
@@ -43,9 +56,14 @@ export async function fetchRelatedArticles(
     const articles = await client.fetch(
       `*[_type == $type && _id != $currentId] | order(publishedAt desc)[0...$limit] {
         _id,
+        _type,
         title,
         slug,
-        publishedAt
+        publishedAt,
+        mainImage,
+        summary,
+        resume,
+        "author": author->
       }`,
       {
         type: articleType,
@@ -65,22 +83,21 @@ export default function RelatedArticlesSidebar({
   articleType,
   currentId,
   limit = 3,
-  relatedArticles: propRelatedArticles, // Accept pre-fetched articles as prop
-}: Props) {
-  // Get the route for the current article type
-  const route = typeToRoute[articleType] || articleType;
+  relatedArticles: propRelatedArticles,
+  showImage = false,
+  className = "",
+}: Props): JSX.Element {
+  // Get the title for the current article type
+  const title = typeToTitle[articleType] || "Relaterede artikler";
 
   // For server-side rendering, if relatedArticles are provided via props, use them
-  // Otherwise, render a loading state (which will be replaced with actual data on the client)
-  const hasContent = propRelatedArticles && propRelatedArticles.length > 0;
-
   if (!propRelatedArticles) {
     return (
-      <div>
-        <h2 className="text-xs font-bold uppercase tracking-wider mb-4">
-          {typeToTitle[articleType] || "Relaterede artikler"}
-        </h2>
-        <Divider color="secondary/20" spacing="sm" />
+      <div className={className}>
+        <h3 className="text-xs font-bold uppercase tracking-wider">
+          {title}
+        </h3>
+        <Divider spacing="sm" />
         <div className="p-4 bg-background-light/30 border border-secondary/20">
           <p className="text-black/70 text-sm">
             Ingen relaterede artikler tilgængelige
@@ -92,11 +109,11 @@ export default function RelatedArticlesSidebar({
 
   if (propRelatedArticles.length === 0) {
     return (
-      <div>
-        <h2 className="text-xs font-bold uppercase tracking-wider mb-4">
-          {typeToTitle[articleType] || "Relaterede artikler"}
-        </h2>
-        <Divider color="secondary/20" spacing="sm" />
+      <div className={className}>
+        <h3 className="text-xs font-bold uppercase tracking-wider">
+          {title}
+        </h3>
+        <Divider spacing="sm" />
         <div className="p-4 bg-background-light/30 border border-secondary/20">
           <p className="text-black/70 text-sm">
             Ingen relaterede artikler fundet
@@ -106,25 +123,15 @@ export default function RelatedArticlesSidebar({
     );
   }
 
+  // Use the ArticleSidebar component with our related articles
   return (
-    <div>
-      <h2 className="text-xs font-bold uppercase tracking-wider mb-4">
-        {typeToTitle[articleType] || "Relaterede artikler"}
-      </h2>
-      <Divider color="secondary/20" spacing="sm" />
-      <ul className="space-y-1">
-        {propRelatedArticles.map((article) => (
-          <li key={article._id} className="pb-1">
-            <a
-              href={`/${route}/${article.slug.current}`}
-              className="text-sm font-medium text-black transition-colors"
-            >
-              {article.title}
-            </a>
-          </li>
-        ))}
-      </ul>
-      <Divider color="secondary/20" spacing="sm" />
-    </div>
+    <ArticleSidebar
+      title={title}
+      items={propRelatedArticles}
+      limit={limit}
+      showImage={showImage}
+      className={className}
+      contentType={articleType}
+    />
   );
 }

@@ -1,10 +1,11 @@
 import { client } from "../utils/sanity.ts";
 import Layout from "../components/Layout.tsx";
 import { Handlers, PageProps } from "$fresh/server.ts";
-import ArticleCard from "../components/ArticleCard.tsx";
-import ArticleSidebar from "../components/ArticleSidebar.tsx";
-import UpcomingGames from "../components/UpcomingGames.tsx";
-import Divider from "../components/Divider.tsx";
+import ArticleCard from "../components/cards/ArticleCard.tsx";
+import ArticleSidebar from "../components/sidebars/ArticleSidebar.tsx";
+import SimpleSidebar from "../components/sidebars/SimpleSidebar.tsx";
+import UpcomingGames from "../components/cards/UpcomingGames.tsx";
+import Divider from "../components/misc/Divider.tsx";
 import { Content, DebatEntry, MestVentedeSpil } from "../types/content.ts";
 import { getContentRoute, getExcerptText } from "../utils/content.ts";
 import {
@@ -101,13 +102,13 @@ export default function Home(
           <div className="lg:col-span-8">
             {/* Fremhævet indhold - hovedoverskrift */}
             {featuredContent.length > 0 && (
-              <div className="mb-8">
+              <div>
                 <ArticleCard
                   content={featuredContent[0]}
                   size="large"
                   className="shadow-none border-0 bg-transparent"
                 />
-                <Divider spacing="lg" />
+                <Divider spacing="md" />
               </div>
             )}
 
@@ -172,29 +173,14 @@ export default function Home(
             />
 
             {/* Redaktionens Udvalgte */}
-            <div className="mb-8">
-              <h3 className="text-xs font-bold uppercase tracking-wider mb-4">
-                Redaktionens Udvalgte
-              </h3>
-              <Divider spacing="sm" />
-              <ul className="space-y-1">
-                {editorsPicksContent.map((content) => (
-                  <li
-                    key={content.slug.current}
-                  >
-                    <a
-                      href={getContentRoute(content)}
-                      className="text-sm font-medium text-black transition-colors"
-                    >
-                      {content.title}
-                    </a>
-                  </li>
-                ))}
-              </ul>
-            </div>
+            <SimpleSidebar
+              title="Redaktionens Udvalgte"
+              items={editorsPicksContent}
+              className="mb-8"
+            />
 
             {/* Nyhedsbrev tilmelding */}
-            <div className="p-4 bg-background-light/30 backdrop-blur-sm mb-8 border border-secondary/20 rounded-lg">
+            <div className="p-4 bg-background-light/30 backdrop-blur-sm mb-8 rounded-lg">
               <h3 className="font-sans font-black text-lg mb-2">
                 Spil Ugen
               </h3>

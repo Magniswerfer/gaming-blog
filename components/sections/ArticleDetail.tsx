@@ -1,9 +1,9 @@
 import { Fragment, JSX } from "preact";
-import { parseContent } from "../utils/sanityParser.tsx";
-import RatingCard from "./RatingCard.tsx";
+import { parseContent } from "../../utils/sanityParser.tsx";
+import RatingCard from "../cards/RatingCard.tsx";
 import RelatedArticlesSidebar, {
   fetchRelatedArticles,
-} from "./RelatedArticlesSidebar.tsx";
+} from "../sidebars/RelatedArticlesSidebar.tsx";
 
 interface Author {
   name: string;

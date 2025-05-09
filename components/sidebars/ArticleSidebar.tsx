@@ -1,5 +1,6 @@
 import { JSX } from "preact";
-import { getOptimizedImageUrl } from "../utils/sanity.ts";
+import { getOptimizedImageUrl } from "../../utils/sanity.ts";
+import Divider from "../misc/Divider.tsx";
 
 interface ContentItem {
   _type?: string;
@@ -82,7 +83,7 @@ export default function ArticleSidebar({
 
   return (
     <div className={`${className}`}>
-      <div className="flex justify-between items-center mb-3 border-b border-secondary/20 pb-2">
+      <div className="flex justify-between items-center">
         <h3 className="text-xs font-bold uppercase tracking-wider">
           {title}
         </h3>
@@ -95,18 +96,15 @@ export default function ArticleSidebar({
           </a>
         )}
       </div>
+      <Divider spacing="sm" />
 
-      <div className="border-b border-secondary/20 pb-3">
+      <div className="pb-2">
         {sortedItems.map((item, index) => (
           <a
             href={getItemUrl(item)}
             className={`block hover:no-underline group ${
               showImage ? "flex items-start" : ""
-            } mb-3 ${
-              index < sortedItems.length - 1
-                ? "pb-3 border-b border-secondary/10"
-                : ""
-            }`}
+            } mb-3 ${index < sortedItems.length - 1 ? "pb-3" : ""}`}
             key={item.slug.current}
           >
             {showImage && (

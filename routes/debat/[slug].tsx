@@ -1,8 +1,8 @@
 import { client } from "../../utils/sanity.ts";
 import Layout from "../../components/Layout.tsx";
 import { Handlers, PageProps } from "$fresh/server.ts";
-import ArticleDetail from "../../components/ArticleDetail.tsx";
-import { fetchRelatedArticles } from "../../components/RelatedArticlesSidebar.tsx";
+import ArticleDetail from "../../components/sections/ArticleDetail.tsx";
+import { fetchRelatedArticles } from "../../components/sidebars/RelatedArticlesSidebar.tsx";
 
 // Define interface to match the ArticleDetail component
 interface Author {

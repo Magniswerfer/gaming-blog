@@ -2,8 +2,8 @@ import { Handlers, PageProps } from "$fresh/server.ts";
 import Layout from "../../components/Layout.tsx";
 import { BlockContent } from "../../utils/sanityParser.tsx";
 import { client } from "../../utils/sanity.ts";
-import ArticleDetail from "../../components/ArticleDetail.tsx";
-import { fetchRelatedArticles } from "../../components/RelatedArticlesSidebar.tsx";
+import ArticleDetail from "../../components/sections/ArticleDetail.tsx";
+import { fetchRelatedArticles } from "../../components/sidebars/RelatedArticlesSidebar.tsx";
 
 interface Author {
   name: string;

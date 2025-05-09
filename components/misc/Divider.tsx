@@ -1,6 +1,6 @@
 interface DividerProps {
   className?: string;
-  spacing?: "sm" | "md" | "lg";
+  spacing?: "no-space" | "tiny" | "sm" | "md" | "lg";
   color?: string;
 }
 
@@ -10,7 +10,9 @@ export default function Divider({
   color = "secondary/20",
 }: DividerProps) {
   const spacingClasses = {
-    sm: "my-2",
+    "no-space": "",
+    tiny: "my-1",
+    sm: "my-3",
     md: "my-4",
     lg: "my-8",
   };

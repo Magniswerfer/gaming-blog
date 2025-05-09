@@ -1,5 +1,5 @@
 import { Handlers, PageProps } from "$fresh/server.ts";
-import CollectionPage from "../../components/CollectionPage.tsx";
+import CollectionPage from "../../components/pages/CollectionPage.tsx";
 import { client } from "../../utils/sanity.ts";
 
 interface Nyhed {

@@ -2,7 +2,7 @@ import { Handlers, PageProps } from "$fresh/server.ts";
 import Layout from "../components/Layout.tsx";
 import { Head } from "$fresh/runtime.ts";
 import { client } from "../utils/sanity.ts";
-import ArticleCollection from "../components/ArticleCollection.tsx";
+import ArticleCollection from "../components/sections/ArticleCollection.tsx";
 
 // Interface for search items from Sanity
 interface SearchItem {
@@ -188,8 +188,6 @@ export const handler: Handlers<SearchData> = {
 
       // Combine all queries
       const searchQuery = `{${typeQueries.join(",")}}`;
-      console.log("Search query:", searchQuery);
-
       const results = await client.fetch(searchQuery);
 
       // Transform results into a standardized format

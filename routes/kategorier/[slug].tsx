@@ -1,6 +1,6 @@
 import { Handlers, PageProps } from "$fresh/server.ts";
 import { client } from "../../utils/sanity.ts";
-import CollectionPage from "../../components/CollectionPage.tsx";
+import CollectionPage from "../../components/pages/CollectionPage.tsx";
 
 interface Kategori {
   _id: string;
