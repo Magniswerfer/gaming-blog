@@ -62,9 +62,9 @@ export default function UpcomingGames({
             <a
               key={index}
               href={gameLink}
-              className="no-underline hover:no-underline"
+              className="no-underline hover:no-underline group"
             >
-              <article className="mb-2 flex flex-col max-w-[220px] bg-background-light border border-secondary/20 p-4 hover:shadow-md transition-shadow">
+              <article className="flex flex-col max-w-[220px] bg-background-light border border-secondary/20 p-4 h-full">
                 <div className="flex mb-2">
                   <div className="mr-3 w-24 aspect-[3/4] relative overflow-hidden flex-shrink-0">
                     <img
@@ -77,7 +77,7 @@ export default function UpcomingGames({
                     />
                   </div>
                   <div className="flex-grow flex items-center">
-                    <h3 className="font-bold text-base leading-tight hover:underline">
+                    <h3 className="font-bold text-base leading-tight group-hover:underline">
                       {game.title || game.game?.title || ""}
                     </h3>
                   </div>
