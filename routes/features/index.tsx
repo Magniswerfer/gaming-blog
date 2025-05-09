@@ -28,7 +28,7 @@ interface Feature {
 export const handler: Handlers<{ features: Feature[]; error?: string }> = {
   async GET(_, ctx) {
     try {
-      const features = await client.fetch<Feature[]>(
+      const results = await client.fetch(
         `*[_type == "feature"] | order(publishedAt desc) {
           _id,
           "_type": _type,
@@ -36,7 +36,7 @@ export const handler: Handlers<{ features: Feature[]; error?: string }> = {
           slug,
           publishedAt,
           "author": author->{name},
-          "mainImage": mainImage{asset->{url}},
+          mainImage,
           subtitle,
           resume,
           summary,
@@ -44,6 +44,31 @@ export const handler: Handlers<{ features: Feature[]; error?: string }> = {
           "categories": categories[]->{title}
         }`,
       );
+
+      // Process the data to handle missing images
+      const features = results.map((item: any) => {
+        // Transform mainImage to the expected format or set to undefined if missing
+        let mainImage = undefined;
+        if (item.mainImage && item.mainImage.asset) {
+          mainImage = {
+            asset: {
+              url: `https://cdn.sanity.io/images/lebsytll/production/${
+                item.mainImage.asset._ref
+                  .replace("image-", "")
+                  .replace("-jpg", ".jpg")
+                  .replace("-png", ".png")
+                  .replace("-webp", ".webp")
+              }`,
+            },
+          };
+        }
+
+        return {
+          ...item,
+          mainImage,
+        };
+      });
+
       return ctx.render({ features, error: undefined });
     } catch (error) {
       console.error("Error fetching features:", error);

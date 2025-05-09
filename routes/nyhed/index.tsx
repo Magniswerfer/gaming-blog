@@ -29,17 +29,38 @@ export const handler: Handlers<NyhederData> = {
         title,
         slug,
         publishedAt,
-        "mainImage": {
-          "asset": {
-            "url": mainImage.asset->url
-          }
-        },
+        mainImage,
         resume,
         "author": author->{name},
         isBreaking
       }`;
 
-      const nyheder = await client.fetch(query);
+      const results = await client.fetch(query);
+
+      // Process the data to handle missing images
+      const nyheder = results.map((item: any) => {
+        // Transform mainImage to the expected format or set to undefined if missing
+        let mainImage = undefined;
+        if (item.mainImage && item.mainImage.asset) {
+          mainImage = {
+            asset: {
+              url: `https://cdn.sanity.io/images/lebsytll/production/${
+                item.mainImage.asset._ref
+                  .replace("image-", "")
+                  .replace("-jpg", ".jpg")
+                  .replace("-png", ".png")
+                  .replace("-webp", ".webp")
+              }`,
+            },
+          };
+        }
+
+        return {
+          ...item,
+          mainImage,
+        };
+      });
+
       return ctx.render({ nyheder });
     } catch (error) {
       console.error("Error fetching news:", error);

@@ -2,8 +2,10 @@ import { client } from "../../utils/sanity.ts";
 import Layout from "../../components/Layout.tsx";
 import { Handlers, PageProps } from "$fresh/server.ts";
 import ArticleDetail from "../../components/ArticleDetail.tsx";
+import { fetchRelatedArticles } from "../../components/RelatedArticlesSidebar.tsx";
 
 interface Feature {
+  _id: string;
   title: string;
   slug: { current: string };
   author?: {
@@ -27,16 +29,37 @@ interface Feature {
   body?: any[];
 }
 
-export const handler: Handlers<Feature | null> = {
+// Define the type for related articles
+interface RelatedArticle {
+  _id: string;
+  title: string;
+  slug: { current: string };
+  publishedAt: string;
+}
+
+interface FeatureData {
+  feature: Feature | null;
+  relatedArticles: RelatedArticle[];
+}
+
+export const handler: Handlers<FeatureData> = {
   async GET(_, ctx) {
     const { slug } = ctx.params;
     try {
       const feature = await client.fetch<Feature>(
         `*[_type == "feature" && slug.current == $slug][0]{
+          _id,
           title,
           slug,
-          "author": author->{name, "image": image{asset->{url}}},
-          "mainImage": mainImage{asset->{url}},
+          "author": author->{
+            name, 
+            "image": defined(image) && defined(image.asset) ? {
+              asset->{url}
+            } : null
+          },
+          "mainImage": defined(mainImage) && defined(mainImage.asset) ? {
+            asset->{url}
+          } : null,
           subtitle,
           "categories": categories[]->{title},
           publishedAt,
@@ -44,17 +67,26 @@ export const handler: Handlers<Feature | null> = {
         }`,
         { slug },
       );
-      return ctx.render(feature);
+
+      let relatedArticles: RelatedArticle[] = [];
+      if (feature) {
+        // Fetch related feature articles
+        relatedArticles = await fetchRelatedArticles("feature", feature._id, 3);
+      }
+
+      return ctx.render({ feature, relatedArticles });
     } catch (error) {
       console.error("Error fetching feature:", error);
-      return ctx.render(null);
+      return ctx.render({ feature: null, relatedArticles: [] });
     }
   },
 };
 
 export default function FeaturePost(
-  { data: feature }: PageProps<Feature | null>,
+  { data }: PageProps<FeatureData>,
 ) {
+  const { feature, relatedArticles = [] } = data;
+
   if (!feature) {
     return (
       <Layout title="Feature Ikke Fundet - CRITICO">
@@ -89,6 +121,9 @@ export default function FeaturePost(
         categories={feature.categories}
         body={feature.body}
         backLink={{ url: "/features", label: "Tilbage til Features" }}
+        articleId={feature._id}
+        articleType="feature"
+        relatedArticles={relatedArticles}
       />
     </Layout>
   );

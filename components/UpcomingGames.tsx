@@ -26,8 +26,8 @@ export default function UpcomingGames({
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         {games.map((game, index) => {
           const coverImage = game.game?.gameJson
-            ? getGameCoverImage(game.game.gameJson)
-            : "https://images.unsplash.com/photo-1542751371-adc38448a05e?w=800&auto=format&fit=crop&q=60";
+            ? getGameCoverImage(game.game.gameJson, 192, 256)
+            : getGameCoverImage("", 192, 256);
 
           return (
             <article
@@ -40,6 +40,9 @@ export default function UpcomingGames({
                     src={coverImage}
                     alt={game.title || game.game?.title || ""}
                     className="w-full h-full object-cover absolute inset-0"
+                    width={192}
+                    height={256}
+                    loading="lazy"
                   />
                 </div>
                 <div className="flex-grow flex items-center">

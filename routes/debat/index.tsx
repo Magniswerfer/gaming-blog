@@ -47,7 +47,7 @@ interface DebatDisplayItem {
 export const handler: Handlers<{ debats: Debat[]; error?: string }> = {
   async GET(_, ctx) {
     try {
-      const debats = await client.fetch<Debat[]>(
+      const results = await client.fetch(
         `*[_type == "debat"] | order(publishedAt desc) {
           _id,
           "_type": _type,
@@ -55,12 +55,37 @@ export const handler: Handlers<{ debats: Debat[]; error?: string }> = {
           slug,
           publishedAt,
           "author": author->{name},
-          "mainImage": mainImage{asset->{url}},
+          mainImage,
           "categories": categories[]->{title},
           summary,
           underrubrik
         }`,
       );
+
+      // Process the data to handle missing images
+      const debats = results.map((item: any) => {
+        // Transform mainImage to the expected format or set to undefined if missing
+        let mainImage = undefined;
+        if (item.mainImage && item.mainImage.asset) {
+          mainImage = {
+            asset: {
+              url: `https://cdn.sanity.io/images/lebsytll/production/${
+                item.mainImage.asset._ref
+                  .replace("image-", "")
+                  .replace("-jpg", ".jpg")
+                  .replace("-png", ".png")
+                  .replace("-webp", ".webp")
+              }`,
+            },
+          };
+        }
+
+        return {
+          ...item,
+          mainImage,
+        };
+      });
+
       return ctx.render({ debats, error: undefined });
     } catch (error) {
       console.error("Error fetching debats:", error);

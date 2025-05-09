@@ -2,18 +2,33 @@ import { Handlers, PageProps } from "$fresh/server.ts";
 import Layout from "../components/Layout.tsx";
 import { Head } from "$fresh/runtime.ts";
 import { client } from "../utils/sanity.ts";
+import ArticleCollection from "../components/ArticleCollection.tsx";
 
 // Interface for search items from Sanity
 interface SearchItem {
   _id: string;
   _type: string;
   title: string;
+  slug: { current: string };
   description?: string;
   publishedAt?: string;
+  mainImage?: {
+    asset: {
+      url: string;
+    };
+  };
+  resume?: string;
   coverImage?: string;
-  mainImage?: string;
   category: string;
-  url: string;
+  author?: {
+    name: string;
+    image?: {
+      asset: {
+        url: string;
+      };
+    };
+  };
+  rating?: number;
 }
 
 interface ContentTypeConfig {
@@ -38,7 +53,7 @@ const CONTENT_TYPE_CONFIG: Record<string, ContentTypeConfig> = {
     category: "Anmeldelser",
     urlPrefix: "/anmeldelser/",
     fields: {
-      description: "excerpt",
+      description: "resume",
       image: "coverImage.asset->url",
     },
   },
@@ -46,16 +61,16 @@ const CONTENT_TYPE_CONFIG: Record<string, ContentTypeConfig> = {
     category: "Anmeldelser",
     urlPrefix: "/anmeldelser/",
     fields: {
-      description: "excerpt",
-      image: "coverImage.asset->url",
+      description: "resume",
+      image: "mainImage.asset->url",
     },
   },
   review: {
     category: "Anmeldelser",
     urlPrefix: "/anmeldelser/",
     fields: {
-      description: "excerpt",
-      image: "coverImage.asset->url",
+      description: "resume",
+      image: "mainImage.asset->url",
     },
   },
 
@@ -82,16 +97,16 @@ const CONTENT_TYPE_CONFIG: Record<string, ContentTypeConfig> = {
     category: "Features",
     urlPrefix: "/features/",
     fields: {
-      description: "excerpt",
-      image: "coverImage.asset->url",
+      description: "resume",
+      image: "mainImage.asset->url",
     },
   },
   artikel: {
     category: "Features",
     urlPrefix: "/features/",
     fields: {
-      description: "excerpt",
-      image: "coverImage.asset->url",
+      description: "resume",
+      image: "mainImage.asset->url",
     },
   },
 
@@ -100,16 +115,16 @@ const CONTENT_TYPE_CONFIG: Record<string, ContentTypeConfig> = {
     category: "Debat",
     urlPrefix: "/debat/",
     fields: {
-      description: "excerpt",
-      image: "coverImage.asset->url",
+      description: "resume",
+      image: "mainImage.asset->url",
     },
   },
   debate: {
     category: "Debat",
     urlPrefix: "/debat/",
     fields: {
-      description: "excerpt",
-      image: "coverImage.asset->url",
+      description: "resume",
+      image: "mainImage.asset->url",
     },
   },
 };
@@ -149,6 +164,7 @@ export const handler: Handlers<SearchData> = {
       const typeQueries = searchableTypes.map((type) => {
         const config = CONTENT_TYPE_CONFIG[type];
         const descriptionField = config.fields.description;
+        const imageFieldPath = config.fields.image.split("->")[0]; // e.g., mainImage.asset
 
         return `"${type}": *[_type == "${type}" && (
           title match "*${query}*" || 
@@ -157,15 +173,22 @@ export const handler: Handlers<SearchData> = {
           _id,
           _type,
           title,
-          "slug": slug.current,
+          "slug": { "current": slug.current },
           "${descriptionField}": ${descriptionField},
           publishedAt,
-          "${config.fields.image.split("->")[0]}": ${config.fields.image}
+          "mainImage": {
+            "asset": {
+              "url": ${imageFieldPath}->url
+            }
+          },
+          "author": author->{name, image},
+          rating
         }`;
       });
 
       // Combine all queries
       const searchQuery = `{${typeQueries.join(",")}}`;
+      console.log("Search query:", searchQuery);
 
       const results = await client.fetch(searchQuery);
 
@@ -177,25 +200,28 @@ export const handler: Handlers<SearchData> = {
 
         const config = CONTENT_TYPE_CONFIG[type];
         const typeResults = results[type];
+        const descriptionField = config.fields.description;
+
+        // Log the first result for debugging
+        if (typeResults.length > 0) {
+          console.log(
+            `Sample result for ${type}:`,
+            JSON.stringify(typeResults[0], null, 2),
+          );
+        }
 
         const transformedItems = typeResults.map((item: any) => {
-          // Determine which field has the description
-          const descriptionField = config.fields.description;
-          const description = item[descriptionField];
-
-          // Determine which field has the image
-          const imageField = config.fields.image.split("->")[0];
-          const coverImage = item[imageField];
-
           return {
             _id: item._id,
             _type: item._type,
             title: item.title,
-            description,
-            publishedAt: item.publishedAt,
-            coverImage,
+            slug: item.slug,
+            resume: item[descriptionField],
+            publishedAt: item.publishedAt || "",
+            mainImage: item.mainImage,
+            author: item.author,
+            rating: item.rating,
             category: config.category,
-            url: `${config.urlPrefix}${item.slug}`,
           };
         });
 
@@ -256,36 +282,26 @@ function formatDate(dateString?: string) {
 export default function Search({ data }: PageProps<SearchData>) {
   const { query, results, error } = data;
 
-  // Group results by category
-  const resultsByCategory: Record<string, SearchItem[]> = {};
-
-  results.forEach((item) => {
-    if (!resultsByCategory[item.category]) {
-      resultsByCategory[item.category] = [];
-    }
-    resultsByCategory[item.category].push(item);
-  });
-
-  // Get category display names and order
-  const categoryOrder = ["Anmeldelser", "Nyheder", "Features", "Debat"];
-  const categories = Object.keys(resultsByCategory).sort(
-    (a, b) => categoryOrder.indexOf(a) - categoryOrder.indexOf(b),
-  );
+  // Add category as underrubrik for display and ensure all required fields are present
+  const enhancedResults = results.map((item) => ({
+    ...item,
+    publishedAt: item.publishedAt || "", // Ensure publishedAt is always a string
+    underrubrik: item.category,
+  }));
 
   return (
     <Layout title="Søg | CRITICO">
-      <Head>
-        <title>Søg | CRITICO</title>
-        <meta
-          name="description"
-          content="Søg i alle artikler, anmeldelser og features på CRITICO"
-        />
-      </Head>
+      <div className="max-w-7xl mx-auto px-4 min-h-[calc(100vh-400px)]">
+        <header className="py-8 mb-6 border-b border-secondary/20">
+          <h1 className="font-sans font-black text-4xl md:text-5xl text-black mb-3">
+            Søg
+          </h1>
+          <p className="text-black/80 max-w-3xl">
+            Find artikler, anmeldelser, nyheder og features fra CRITICO
+          </p>
+        </header>
 
-      <div className="max-w-4xl mx-auto px-4">
-        <div className="mb-10">
-          <h1 className="text-3xl font-bold mb-6">Søg</h1>
-
+        <div className="py-6">
           <form method="GET" action="/search" className="mb-8">
             <div className="flex flex-col md:flex-row gap-2">
               <div className="relative flex-grow">
@@ -294,12 +310,12 @@ export default function Search({ data }: PageProps<SearchData>) {
                   name="q"
                   defaultValue={query}
                   placeholder="Søg efter anmeldelser, nyheder, features og debatter..."
-                  className="w-full px-4 py-3 border border-secondary/20 rounded-md focus:outline-none focus:ring-2 focus:ring-primary/50"
+                  className="w-full px-4 py-3 border border-secondary/20 focus:outline-none focus:ring-2 focus:ring-primary/50"
                   aria-label="Søgefelt"
                 />
                 <button
                   type="submit"
-                  className="absolute right-3 top-1/2 -translate-y-1/2 p-1 rounded-md text-primary hover:bg-primary/10"
+                  className="absolute right-3 top-1/2 -translate-y-1/2 p-1 text-primary hover:bg-primary/10"
                 >
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
@@ -319,17 +335,15 @@ export default function Search({ data }: PageProps<SearchData>) {
               </div>
               <button
                 type="submit"
-                className="md:w-auto px-6 py-3 bg-primary text-white rounded-md hover:bg-primary/90 transition-colors"
+                className="md:w-auto px-6 py-3 bg-primary text-white hover:bg-primary/90 transition-colors"
               >
                 Søg
               </button>
             </div>
           </form>
 
-          {/* Error */}
           {error && <p className="text-red-600 mb-4">{error}</p>}
 
-          {/* Results count */}
           {query && !error && (
             <p className="text-sm mb-4 text-black/70">
               {results.length === 0
@@ -340,85 +354,24 @@ export default function Search({ data }: PageProps<SearchData>) {
             </p>
           )}
 
-          {/* Results by category */}
-          {results.length > 0 && (
-            <div>
-              {categories.map((category) => (
-                <div key={category} className="mb-8">
-                  <h2 className="text-xl font-bold mb-4 pb-2 border-b border-secondary/20">
-                    {category} ({resultsByCategory[category].length})
-                  </h2>
+          {results.length > 0 && !error && (
+            <ArticleCollection
+              items={enhancedResults as any} // Type assertion to avoid type issues
+              layout="grid"
+              showExcerpt={true}
+              emptyMessage="Ingen søgeresultater fundet"
+            />
+          )}
 
-                  <div className="space-y-6">
-                    {resultsByCategory[category].map((item) => (
-                      <article
-                        key={item._id}
-                        className="border-b border-secondary/10 pb-6"
-                      >
-                        <div className="flex flex-col md:flex-row gap-4">
-                          {item.coverImage && (
-                            <div className="w-full md:w-1/4 shrink-0">
-                              <a
-                                href={item.url}
-                                className="hover:opacity-90 block"
-                              >
-                                <div className="aspect-video bg-black/5 rounded-md overflow-hidden">
-                                  <img
-                                    src={item.coverImage}
-                                    alt={item.title}
-                                    className="w-full h-full object-cover"
-                                  />
-                                </div>
-                              </a>
-                            </div>
-                          )}
-
-                          <div
-                            className={item.coverImage ? "md:w-3/4" : "w-full"}
-                          >
-                            <div className="flex flex-wrap items-center gap-2 mb-2">
-                              <span
-                                className={`text-xs px-2 py-1 rounded ${
-                                  getCategoryColor(item.category)
-                                }`}
-                              >
-                                {item.category}
-                              </span>
-                              {item.publishedAt && (
-                                <span className="text-xs text-black/60">
-                                  {formatDate(item.publishedAt)}
-                                </span>
-                              )}
-                            </div>
-
-                            <h3 className="text-xl font-bold mb-1">
-                              <a
-                                href={item.url}
-                                className="hover:text-primary hover:no-underline"
-                              >
-                                {item.title}
-                              </a>
-                            </h3>
-
-                            {item.description && (
-                              <p className="text-black/70 mb-3">
-                                {item.description}
-                              </p>
-                            )}
-
-                            <a
-                              href={item.url}
-                              className="text-sm font-medium text-primary hover:underline"
-                            >
-                              Læs mere
-                            </a>
-                          </div>
-                        </div>
-                      </article>
-                    ))}
-                  </div>
-                </div>
-              ))}
+          {query && results.length === 0 && !error && (
+            <div className="py-16 text-center">
+              <p className="text-lg text-black/60 mb-4">
+                Ingen resultater fundet for "{query}"
+              </p>
+              <p className="text-sm text-black/50">
+                Prøv at søge efter andre nøgleord eller browse vores sektioner i
+                menulinjen.
+              </p>
             </div>
           )}
         </div>

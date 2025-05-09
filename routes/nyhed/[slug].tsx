@@ -3,6 +3,7 @@ import Layout from "../../components/Layout.tsx";
 import { BlockContent } from "../../utils/sanityParser.tsx";
 import { client } from "../../utils/sanity.ts";
 import ArticleDetail from "../../components/ArticleDetail.tsx";
+import { fetchRelatedArticles } from "../../components/RelatedArticlesSidebar.tsx";
 
 interface Author {
   name: string;
@@ -10,6 +11,7 @@ interface Author {
 }
 
 interface NyhedDetail {
+  _id: string;
   title: string;
   publishedAt: string;
   mainImage?: { asset: { url: string } };
@@ -23,6 +25,7 @@ interface NyhedDetail {
 
 interface NyhedDetailData {
   nyhed?: NyhedDetail;
+  relatedArticles?: any[];
   error?: string;
 }
 
@@ -32,36 +35,59 @@ export const handler: Handlers<NyhedDetailData> = {
 
     try {
       // GROQ query to fetch a specific news article by slug
-      const query = `*[_type == "nyhed" && slug.current == "${slug}"][0] {
+      const query = `*[_type == "nyhed" && slug.current == $slug][0] {
+        _id,
         title,
         publishedAt,
         underrubrik,
         resume,
         isBreaking,
-        "mainImage": {
-          "asset": {
-            "url": mainImage.asset->url
-          }
-        },
-        "author": author->{
-          name,
-          "image": {
-            "asset": {
-              "url": image.asset->url
-            }
-          }
-        },
+        mainImage,
+        author->{name, image},
         "categories": categories[]->{title},
         body
       }`;
 
-      const nyhed = await client.fetch(query);
+      const nyhed = await client.fetch(query, { slug });
 
       if (!nyhed) {
         return ctx.render({ error: "Nyhed ikke fundet" });
       }
 
-      return ctx.render({ nyhed });
+      // Process the mainImage to match expected format
+      if (nyhed.mainImage && nyhed.mainImage.asset) {
+        nyhed.mainImage = {
+          asset: {
+            url: `https://cdn.sanity.io/images/lebsytll/production/${
+              nyhed.mainImage.asset._ref
+                .replace("image-", "")
+                .replace("-jpg", ".jpg")
+                .replace("-png", ".png")
+                .replace("-webp", ".webp")
+            }`,
+          },
+        };
+      }
+
+      // Process author image if it exists
+      if (nyhed.author && nyhed.author.image && nyhed.author.image.asset) {
+        nyhed.author.image = {
+          asset: {
+            url: `https://cdn.sanity.io/images/lebsytll/production/${
+              nyhed.author.image.asset._ref
+                .replace("image-", "")
+                .replace("-jpg", ".jpg")
+                .replace("-png", ".png")
+                .replace("-webp", ".webp")
+            }`,
+          },
+        };
+      }
+
+      // Fetch related news articles
+      const relatedArticles = await fetchRelatedArticles("nyhed", nyhed._id, 3);
+
+      return ctx.render({ nyhed, relatedArticles });
     } catch (error) {
       console.error("Error fetching news article:", error);
       return ctx.render({
@@ -73,7 +99,7 @@ export const handler: Handlers<NyhedDetailData> = {
 };
 
 export default function NyhedDetail({ data }: PageProps<NyhedDetailData>) {
-  const { nyhed, error } = data;
+  const { nyhed, relatedArticles = [], error } = data;
 
   if (error) {
     return (
@@ -139,6 +165,9 @@ export default function NyhedDetail({ data }: PageProps<NyhedDetailData>) {
         categories={nyhed.categories}
         body={nyhed.body}
         backLink={{ url: "/nyhed", label: "Tilbage til alle nyheder" }}
+        articleId={nyhed._id}
+        articleType="nyhed"
+        relatedArticles={relatedArticles}
       >
         {additionalContent}
       </ArticleDetail>

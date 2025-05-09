@@ -1,6 +1,9 @@
 import { Fragment, JSX } from "preact";
 import { parseContent } from "../utils/sanityParser.tsx";
 import RatingCard from "./RatingCard.tsx";
+import RelatedArticlesSidebar, {
+  fetchRelatedArticles,
+} from "./RelatedArticlesSidebar.tsx";
 
 interface Author {
   name: string;
@@ -35,6 +38,9 @@ interface ArticleDetailProps {
   customSidebar?: JSX.Element;
   rating?: number;
   ratingText?: string;
+  articleId?: string;
+  articleType?: "anmeldelse" | "nyhed" | "debat" | "feature";
+  relatedArticles?: any[]; // Pre-fetched related articles
 }
 
 // Format date
@@ -59,7 +65,36 @@ export default function ArticleDetail({
   customSidebar,
   rating,
   ratingText,
+  articleId,
+  articleType,
+  relatedArticles,
 }: ArticleDetailProps) {
+  // Sidebar component
+  const sidebarContent = customSidebar ? customSidebar : (
+    articleId && articleType
+      ? (
+        <RelatedArticlesSidebar
+          articleType={articleType}
+          currentId={articleId}
+          limit={3}
+          relatedArticles={relatedArticles}
+        />
+      )
+      : (
+        // Fallback for backward compatibility
+        <div>
+          <h2 className="text-xs font-bold uppercase tracking-wider mb-4 border-b border-secondary/20 pb-2">
+            Relaterede artikler
+          </h2>
+          <div className="p-4 bg-background-light/30 border border-secondary/20">
+            <p className="text-black/70 text-sm">
+              Ingen relaterede artikler tilgængelige
+            </p>
+          </div>
+        </div>
+      )
+  );
+
   return (
     <div className="max-w-7xl mx-auto px-4">
       {/* Breadcrumb - now outside the grid to span full width */}
@@ -188,40 +223,8 @@ export default function ArticleDetail({
         {/* Sidebar */}
         <div className="lg:col-span-3">
           <div className="sticky top-8 mt-0">
-            {/* Custom sidebar or default related links */}
-            {customSidebar ? customSidebar : (
-              <div>
-                <h2 className="text-xs font-bold uppercase tracking-wider mb-4 border-b border-secondary/20 pb-2">
-                  Relaterede artikler
-                </h2>
-                <ul className="space-y-3">
-                  <li className="border-b border-secondary/20 pb-3">
-                    <a
-                      href="#"
-                      className="text-sm font-medium text-black hover:text-accent-gold transition-colors"
-                    >
-                      Find mere i samme kategori
-                    </a>
-                  </li>
-                  <li className="border-b border-secondary/20 pb-3">
-                    <a
-                      href="#"
-                      className="text-sm font-medium text-black hover:text-accent-gold transition-colors"
-                    >
-                      Seneste artikler
-                    </a>
-                  </li>
-                  <li className="border-b border-secondary/20 pb-3">
-                    <a
-                      href="#"
-                      className="text-sm font-medium text-black hover:text-accent-gold transition-colors"
-                    >
-                      Populære artikler
-                    </a>
-                  </li>
-                </ul>
-              </div>
-            )}
+            {/* Use our sidebar content */}
+            {sidebarContent}
           </div>
         </div>
       </div>

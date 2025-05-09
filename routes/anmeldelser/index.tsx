@@ -35,18 +35,14 @@ export const handler: Handlers<{ reviews: Review[]; error?: string }> = {
   async GET(req, ctx) {
     try {
       // Query for all reviews, sorted by publish date
-      const reviews = await client.fetch(`
+      const results = await client.fetch(`
         *[_type == "anmeldelse"] | order(publishedAt desc) {
           _id,
           "_type": _type,
           title,
           slug,
           "author": author->{name, image},
-          "mainImage": {
-            "asset": {
-              "url": mainImage.asset->url
-            }
-          },
+          mainImage,
           rating,
           publishedAt,
           "gameData": gameData->{title},
@@ -54,6 +50,31 @@ export const handler: Handlers<{ reviews: Review[]; error?: string }> = {
           underrubrik
         }
       `);
+
+      // Process the data to handle missing images
+      const reviews = results.map((item: any) => {
+        // Transform mainImage to the expected format or set to undefined if missing
+        let mainImage = undefined;
+        if (item.mainImage && item.mainImage.asset) {
+          mainImage = {
+            asset: {
+              url: `https://cdn.sanity.io/images/lebsytll/production/${
+                item.mainImage.asset._ref
+                  .replace("image-", "")
+                  .replace("-jpg", ".jpg")
+                  .replace("-png", ".png")
+                  .replace("-webp", ".webp")
+              }`,
+            },
+          };
+        }
+
+        return {
+          ...item,
+          mainImage,
+        };
+      });
+
       return ctx.render({ reviews, error: undefined });
     } catch (error) {
       console.error("Error fetching reviews:", error);

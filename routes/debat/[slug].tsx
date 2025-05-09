@@ -2,55 +2,159 @@ import { client } from "../../utils/sanity.ts";
 import Layout from "../../components/Layout.tsx";
 import { Handlers, PageProps } from "$fresh/server.ts";
 import ArticleDetail from "../../components/ArticleDetail.tsx";
+import { fetchRelatedArticles } from "../../components/RelatedArticlesSidebar.tsx";
 
-interface Debat {
+// Define interface to match the ArticleDetail component
+interface Author {
+  name: string;
+  image?: {
+    asset: {
+      url: string;
+    };
+  };
+}
+
+interface Category {
+  title: string;
+}
+
+// Interface for raw data from Sanity
+interface RawDebat {
+  _id: string;
   title: string;
   slug: { current: string };
   author?: {
     name: string;
     image?: {
       asset: {
-        url: string;
+        _ref: string;
       };
     };
   };
   mainImage?: {
     asset: {
-      url: string;
+      _ref: string;
     };
   };
-  categories?: Array<{
-    title: string;
-  }>;
+  categories?: Category[];
   publishedAt?: string;
   body?: any[];
 }
 
-export const handler: Handlers<Debat | null> = {
+// Interface for processed data
+interface Debat {
+  _id: string;
+  title: string;
+  slug: { current: string };
+  author?: Author;
+  mainImage?: {
+    asset: {
+      url: string;
+    };
+  };
+  categories?: Category[];
+  publishedAt?: string;
+  body?: any[];
+}
+
+// Define the type for related articles
+interface RelatedArticle {
+  _id: string;
+  title: string;
+  slug: { current: string };
+  publishedAt: string;
+}
+
+interface DebatData {
+  debat: Debat | null;
+  relatedArticles: RelatedArticle[];
+}
+
+export const handler: Handlers<DebatData> = {
   async GET(_, ctx) {
     const { slug } = ctx.params;
     try {
-      const debat = await client.fetch<Debat>(
-        `*[_type == "debat" && slug.current == $slug][0]{
+      const rawDebat = await client.fetch<RawDebat>(
+        `*[_type == "debat" && slug.current == $slug][0] {
+          _id,
           title,
           slug,
-          "author": author->{name, "image": image{asset->{url}}},
-          "mainImage": mainImage{asset->{url}},
-          "categories": categories[]->{title},
+          author->{name, image},
+          mainImage,
+          categories[]->{title},
           publishedAt,
           body
         }`,
         { slug },
       );
-      return ctx.render(debat);
+
+      // Convert raw data to Debat interface
+      const debat: Debat | null = rawDebat
+        ? {
+          ...rawDebat,
+          mainImage: undefined,
+          author: rawDebat.author
+            ? {
+              name: rawDebat.author.name,
+              image: undefined,
+            }
+            : undefined,
+        }
+        : null;
+
+      // Process the mainImage to match expected format
+      if (
+        debat && rawDebat.mainImage && rawDebat.mainImage.asset &&
+        rawDebat.mainImage.asset._ref
+      ) {
+        debat.mainImage = {
+          asset: {
+            url: `https://cdn.sanity.io/images/lebsytll/production/${
+              rawDebat.mainImage.asset._ref
+                .replace("image-", "")
+                .replace("-jpg", ".jpg")
+                .replace("-png", ".png")
+                .replace("-webp", ".webp")
+            }`,
+          },
+        };
+      }
+
+      // Process author image if it exists
+      if (
+        debat && debat.author && rawDebat.author && rawDebat.author.image &&
+        rawDebat.author.image.asset
+      ) {
+        debat.author.image = {
+          asset: {
+            url: `https://cdn.sanity.io/images/lebsytll/production/${
+              rawDebat.author.image.asset._ref
+                .replace("image-", "")
+                .replace("-jpg", ".jpg")
+                .replace("-png", ".png")
+                .replace("-webp", ".webp")
+            }`,
+          },
+        };
+      }
+
+      let relatedArticles: RelatedArticle[] = [];
+      if (debat) {
+        // Fetch related debate articles
+        relatedArticles = await fetchRelatedArticles("debat", debat._id, 3);
+      }
+
+      return ctx.render({ debat, relatedArticles });
     } catch (error) {
       console.error("Error fetching debat:", error);
-      return ctx.render(null);
+      return ctx.render({ debat: null, relatedArticles: [] });
     }
   },
 };
 
-export default function DebatPost({ data: debat }: PageProps<Debat | null>) {
+export default function DebatPost({ data }: PageProps<DebatData>) {
+  const { debat, relatedArticles = [] } = data;
+
   if (!debat) {
     return (
       <Layout title="Indlæg Ikke Fundet - CRITICO">
@@ -84,6 +188,9 @@ export default function DebatPost({ data: debat }: PageProps<Debat | null>) {
         categories={debat.categories}
         body={debat.body}
         backLink={{ url: "/debat", label: "Tilbage til Debat" }}
+        articleId={debat._id}
+        articleType="debat"
+        relatedArticles={relatedArticles}
       />
     </Layout>
   );

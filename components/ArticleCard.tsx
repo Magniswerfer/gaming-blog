@@ -1,5 +1,6 @@
 import { JSX } from "preact";
 import { Content } from "../types/content.ts";
+import { getOptimizedImageUrl } from "../utils/sanity.ts";
 
 interface ArticleCardProps {
   content: Content;
@@ -44,6 +45,16 @@ export default function ArticleCard({
         return `/${content.slug.current}`;
     }
   }
+
+  // Image size dimensions based on the size prop
+  const imageDimensions = {
+    small: { width: horizontal ? 200 : 400, height: horizontal ? 150 : 200 },
+    medium: { width: 600, height: 300 },
+    large: { width: 1200, height: 600 },
+  };
+
+  // Get appropriate dimensions based on card size
+  const dimensions = imageDimensions[size];
 
   // Image size classes based on the size prop
   const imageSizes = {
@@ -95,7 +106,7 @@ export default function ArticleCard({
           )}
 
           {/* Content image */}
-          {content.mainImage?.asset?.url
+          {content.mainImage?.asset
             ? (
               <div
                 className={`overflow-hidden ${
@@ -103,9 +114,16 @@ export default function ArticleCard({
                 }`}
               >
                 <img
-                  src={content.mainImage.asset.url}
+                  src={getOptimizedImageUrl(
+                    content.mainImage,
+                    dimensions.width,
+                    dimensions.height,
+                  )}
                   alt={content.title}
                   className="w-full h-full object-cover"
+                  width={dimensions.width}
+                  height={dimensions.height}
+                  loading="lazy"
                 />
               </div>
             )

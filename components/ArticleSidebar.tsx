@@ -1,4 +1,5 @@
 import { JSX } from "preact";
+import { getOptimizedImageUrl } from "../utils/sanity.ts";
 
 interface ContentItem {
   _type?: string;
@@ -11,9 +12,7 @@ interface ContentItem {
     name: string;
   };
   mainImage?: {
-    asset: {
-      url: string;
-    };
+    asset: any;
   };
   isBreaking?: boolean;
 }
@@ -111,16 +110,19 @@ export default function ArticleSidebar({
             key={item.slug.current}
           >
             {showImage && (
-              item.mainImage?.asset?.url
+              item.mainImage?.asset
                 ? (
                   <div
                     className="mr-3 flex-shrink-0 relative"
                     style={{ width: "70px" }}
                   >
                     <img
-                      src={item.mainImage.asset.url}
+                      src={getOptimizedImageUrl(item.mainImage, 280, 200)}
                       alt={item.title}
                       className="w-full h-full object-cover"
+                      width={280}
+                      height={200}
+                      loading="lazy"
                     />
                     {item.isBreaking && (
                       <div className="bg-red-600 text-white px-1 py-0.5 text-xs font-bold absolute top-0 left-0">
