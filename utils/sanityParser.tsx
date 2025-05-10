@@ -19,8 +19,10 @@ export interface BlockContent {
     targetBlank?: boolean;
   }[];
   asset?: {
-    _ref: string;
-    _type: string;
+    _ref?: string;
+    _type?: string;
+    url?: string;
+    alt?: string;
   };
   alt?: string;
   caption?: string;
@@ -150,6 +152,24 @@ export function parseContent(content: BlockContent[]): JSX.Element[] {
             );
         }
       }
+    } else if (block._type === "image" && block.asset?.url) {
+      // Handle image blocks
+      // Ensure your GROQ query for content resolves asset to include 'url' and 'alt', e.g.:
+      // content[]{ ..., asset->{url, alt} }
+      result.push(
+        <figure key={block._key || index} class="my-8">
+          <img
+            src={block.asset.url}
+            alt={block.asset.alt || block.alt || ""}
+            class="w-full h-auto shadow-md"
+          />
+          {block.caption && (
+            <figcaption class="text-center text-sm text-gray-500 mt-2">
+              {block.caption}
+            </figcaption>
+          )}
+        </figure>,
+      );
     }
   });
 

@@ -131,29 +131,6 @@ export default function NyhedDetail({ data }: PageProps<NyhedDetailData>) {
     );
   }
 
-  // Create JSX elements for additional content
-  const additionalContent = (
-    <>
-      {nyhed.isBreaking
-        ? (
-          <div className="bg-red-600 text-white px-3 py-1 text-sm font-bold inline-block mb-4">
-            BREAKING
-          </div>
-        )
-        : null}
-
-      {nyhed.resume
-        ? (
-          <div className="bg-background-light/20 p-6 rounded-lg mb-8 border-l-4 border-accent-gold">
-            <p className="font-serif text-black/80 italic leading-relaxed">
-              {nyhed.resume}
-            </p>
-          </div>
-        )
-        : null}
-    </>
-  );
-
   return (
     <Layout title={`${nyhed.title} | CRITICO`}>
       <ArticleDetail
@@ -169,7 +146,6 @@ export default function NyhedDetail({ data }: PageProps<NyhedDetailData>) {
         articleType="nyhed"
         relatedArticles={relatedArticles}
       >
-        {additionalContent}
       </ArticleDetail>
     </Layout>
   );

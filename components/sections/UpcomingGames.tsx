@@ -20,7 +20,7 @@ interface UpcomingGamesProps {
 
 export default function UpcomingGames({
   games,
-  title = "Mest Ventede Spil",
+  title = "Vores Mest Ventede Spil",
 }: UpcomingGamesProps) {
   // Helper function to get game slug route
   function getGameRoute(game: Game): string {
@@ -50,7 +50,7 @@ export default function UpcomingGames({
         {title}
       </h3>
       <Divider spacing="sm" />
-      <div className="flex flex-nowrap overflow-x-auto gap-4 -mx-4 px-4 md:grid md:grid-cols-3 md:mx-0 md:px-0 [&::-webkit-scrollbar]:hidden [scrollbar-width:none]">
+      <div className="flex flex-nowrap overflow-x-auto gap-3 -mx-4 px-4 [&::-webkit-scrollbar]:hidden [scrollbar-width:none]">
         {games.map((game, index) => {
           const coverImage = game.game?.gameJson
             ? getGameCoverImage(game.game.gameJson, 192, 256)

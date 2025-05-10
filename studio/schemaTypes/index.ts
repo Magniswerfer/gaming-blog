@@ -7,6 +7,7 @@ import feature from "./feature.ts";
 import nyhed from "./nyhed.ts";
 import gameData from "./gameData.ts";
 import mestVentedeSpil from "./mestVentedeSpil.ts";
+import tekstside from "./tekstside.ts";
 
 export const schemaTypes = [
   author,
@@ -18,4 +19,5 @@ export const schemaTypes = [
   nyhed,
   gameData,
   mestVentedeSpil,
+  tekstside,
 ];

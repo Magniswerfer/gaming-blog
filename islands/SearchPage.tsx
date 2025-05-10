@@ -204,7 +204,7 @@ export default function SearchPage({ initialQuery }: SearchPageProps) {
                 key={item._id}
                 className="border-b border-secondary/10 pb-6"
               >
-                <div className="flex flex-col md:flex-row gap-4">
+                <div className="flex flex-col md:flex-row gap-3">
                   {item.coverImage && (
                     <div className="w-full md:w-1/4 shrink-0">
                       <a href={item.url} className="hover:opacity-90 block">

@@ -126,7 +126,7 @@ export default function ArticleDetail({
                   <h1 className="text-3xl md:text-4xl font-serif font-bold text-white mb-2">
                     {title}
                   </h1>
-                  <div className="flex flex-wrap items-center text-white gap-4">
+                  <div className="flex flex-wrap items-center text-white gap-3">
                     {subtitle
                       ? <div className="text-gray-300">{subtitle}</div>
                       : null}
@@ -174,7 +174,7 @@ export default function ArticleDetail({
                     </p>
                   )
                   : null}
-                <div className="flex flex-wrap items-center gap-4 text-black/70 mb-4">
+                <div className="flex flex-wrap items-center gap-3 text-black/70 mb-4">
                   {author
                     ? (
                       <div className="flex items-center gap-2">

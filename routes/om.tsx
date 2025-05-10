@@ -1,56 +1,90 @@
+import { defineRoute, Handlers, PageProps } from "$fresh/server.ts";
+import { Head } from "$fresh/runtime.ts";
+import TekstsidePage from "../components/pages/TekstsidePage.tsx";
+import { client } from "../utils/sanity.ts";
 import Layout from "../components/Layout.tsx";
 
-export default function About() {
-  return (
-    <Layout title="About - The Questline">
-      <div class="max-w-4xl mx-auto px-6 py-20">
-        <h1 class="font-serif text-5xl text-black mb-12 text-center">
-          About The Questline
-        </h1>
+interface OmTekstsideData {
+  title: string;
+  subtitle?: string;
+  coverImage?: {
+    asset: {
+      url: string;
+    };
+  };
+  body?: any[];
+}
 
-        <div class="space-y-16">
-          <section class="bg-background-light/30 backdrop-blur-sm p-10 rounded-xl border border-secondary/20">
-            <h2 class="font-serif text-3xl text-black mb-6">Our Story</h2>
-            <p class="text-black/90 leading-relaxed mb-6">
-              The Questline offers holistic, thoughtful, and detailed critiques
-              of video games, focusing on narrative structures, player
-              experiences, game mechanics, aesthetics, and how these elements
-              interweave to create compelling gaming journeys.
-            </p>
-            <p class="text-black/90 leading-relaxed">
-              Our name reflects our commitment to exploring the paths and
-              choices that make gaming experiences unique, much like following a
-              questline in your favorite RPG.
-            </p>
-          </section>
+export const handler: Handlers<OmTekstsideData | null> = {
+  async GET(_, ctx) {
+    const query = `*[_type == "tekstside" && slug.current == "om"][0]{
+      title,
+      subtitle,
+      coverImage{
+        asset->{
+          url
+        }
+      },
+      body[] {
+        ...,
+        _type == "image" => {
+          ...,
+          asset->{
+            url
+          }
+        }
+      }
+    }`;
+    const data = await client.fetch<OmTekstsideData | null>(query);
 
-          <section class="bg-background-light/30 backdrop-blur-sm p-10 rounded-xl border border-secondary/20">
-            <h2 class="font-serif text-3xl text-black mb-6">Our Mission</h2>
-            <p class="text-black/90 leading-relaxed mb-6">
-              We believe in thoughtful, nuanced discussions about games that go
-              beyond surface-level reviews. Our critiques explore how narrative,
-              mechanics, and aesthetics work together to create meaningful
-              player experiences.
-            </p>
-            <p class="text-black/90 leading-relaxed">
-              Through our writing, we aim to provide insights that are both
-              accessible and intellectually engaging, helping readers appreciate
-              the artistry and craftsmanship behind great games.
-            </p>
-          </section>
+    if (!data) {
+      return ctx.renderNotFound();
+    }
+    return ctx.render(data);
+  },
+};
 
-          <section class="bg-background-light/30 backdrop-blur-sm p-10 rounded-xl border border-secondary/20">
-            <h2 class="font-serif text-3xl text-black mb-6">Our Approach</h2>
-            <p class="text-black/90 leading-relaxed">
-              Each critique is crafted with care, examining games through
-              multiple lenses: narrative depth, mechanical innovation, aesthetic
-              choices, and player agency. We believe that understanding these
-              elements helps us appreciate games as both art and interactive
-              experiences.
-            </p>
-          </section>
+export default function OmPage({ data }: PageProps<OmTekstsideData | null>) {
+  if (!data) {
+    return (
+      <Layout title="Side ikke fundet - CRITICO">
+        <Head>
+          {/* Layout handles the main title. Add specific meta tags for 404 if any. */}
+          <meta name="robots" content="noindex" />{" "}
+          {/* Example: tell robots not to index 404 */}
+        </Head>
+        <div class="min-h-screen bg-neutral-dark-shade-2E2E2E flex flex-col justify-center items-center text-center px-6 py-20">
+          <h1 class="font-serif text-5xl text-white mb-6">
+            404 - Side ikke fundet
+          </h1>
+          <p class="text-white/80 text-lg mb-10">
+            Siden du ledte efter, kunne desværre ikke findes.
+          </p>
+          <a
+            href="/"
+            class="mt-8 inline-block px-8 py-4 bg-accent-amber text-neutral-dark-shade-1E1E1E font-bold rounded-md hover:bg-gold-darker transition-colors text-lg shadow-lg"
+          >
+            Tilbage til forsiden
+          </a>
         </div>
-      </div>
+      </Layout>
+    );
+  }
+
+  return (
+    <Layout title={`${data.title} - CRITICO`}>
+      <Head>
+        {/* Layout handles the main <title>. Specific meta tags like description can go here. */}
+        {data.subtitle && <meta name="description" content={data.subtitle} />}
+        {!data.subtitle && <></>}{" "}
+        {/* Ensure Head always has a child if subtitle is not present */}
+      </Head>
+      <TekstsidePage
+        title={data.title}
+        subtitle={data.subtitle}
+        coverImage={data.coverImage}
+        body={data.body}
+      />
     </Layout>
   );
 }
