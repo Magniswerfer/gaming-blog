@@ -9,13 +9,13 @@ import gameData from "./gameData.ts";
 import mestVentedeSpil from "./mestVentedeSpil.ts";
 
 export const schemaTypes = [
-    author,
-    kategori,
-    blockContent,
-    anmeldelse,
-    debat,
-    feature,
-    nyhed,
-    gameData,
-    mestVentedeSpil,
+  author,
+  kategori,
+  blockContent,
+  anmeldelse,
+  debat,
+  feature,
+  nyhed,
+  gameData,
+  mestVentedeSpil,
 ];

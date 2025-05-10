@@ -32,5 +32,3 @@ jobs:
           project: "critico"
           entrypoint: "main.ts"
           root: "."
-          
-          
