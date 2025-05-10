@@ -16,7 +16,11 @@ import debounce from "lodash.debounce";
 
 // IGDB API endpoint
 // For development, use the localhost URL directly
-const IGDB_API_URL = "http://localhost:8000/api/igdb";
+const isDevelopment = typeof window !== "undefined" &&
+  globalThis.location.hostname.includes("localhost");
+const IGDB_API_URL = isDevelopment
+  ? "http://localhost:8001/api/igdb/games"
+  : "https://critico.deno.dev/api/igdb/games";
 // In production, uncomment and use your deployed URL:
 // const IGDB_API_URL = "https://your-production-domain.com/api/igdb";
 
