@@ -4,6 +4,7 @@ interface Game {
   _id: string;
   title: string;
   gameJson: string;
+  slug?: { current: string };
 }
 
 export default function GameDataSidebar({
@@ -55,7 +56,18 @@ export default function GameDataSidebar({
         {/* Game title */}
         <div className="p-4">
           <h3 className="text-xl font-serif font-semibold mb-2 text-black">
-            {gameInfo.name}
+            {gameData.slug?.current
+              ? (
+                <a
+                  href={`/spil/${gameData.slug.current}`}
+                  className="hover:underline"
+                >
+                  {gameInfo.name}
+                </a>
+              )
+              : (
+                gameInfo.name
+              )}
           </h3>
 
           {/* Release year */}

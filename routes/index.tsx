@@ -4,7 +4,7 @@ import { Handlers, PageProps } from "$fresh/server.ts";
 import ArticleCard from "../components/cards/ArticleCard.tsx";
 import ArticleSidebar from "../components/sidebars/ArticleSidebar.tsx";
 import SimpleSidebar from "../components/sidebars/SimpleSidebar.tsx";
-import UpcomingGames from "../components/cards/UpcomingGames.tsx";
+import UpcomingGames from "../components/sections/UpcomingGames.tsx";
 import Divider from "../components/misc/Divider.tsx";
 import { Content, DebatEntry, MestVentedeSpil } from "../types/content.ts";
 import { getContentRoute, getExcerptText } from "../utils/content.ts";

@@ -1,4 +1,5 @@
 import { useState } from "preact/hooks";
+import SearchInput from "./SearchInput.tsx";
 
 interface MobileMenuProps {
   links: Array<{
@@ -114,6 +115,13 @@ export default function MobileMenu({ links }: MobileMenuProps) {
                 ))}
               </ul>
             </nav>
+
+            {/* Search input */}
+            <div className="p-4 pt-2">
+              <div className="w-full">
+                <SearchInput isMobile={true} />
+              </div>
+            </div>
 
             {/* Social links */}
             <div className="p-4 mt-4 border-t border-secondary/20">

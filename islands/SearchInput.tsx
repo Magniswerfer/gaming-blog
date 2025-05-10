@@ -1,6 +1,10 @@
 import { useState } from "preact/hooks";
 
-export default function SearchInput() {
+interface SearchInputProps {
+  isMobile?: boolean;
+}
+
+export default function SearchInput({ isMobile = false }: SearchInputProps) {
   const [query, setQuery] = useState("");
 
   const handleSubmit = (e: Event) => {
@@ -12,6 +16,10 @@ export default function SearchInput() {
     }
   };
 
+  const inputClass = isMobile
+    ? "w-full text-xs px-3 py-2 border border-secondary/20 rounded-full focus:outline-none focus:ring-1 focus:ring-primary/50"
+    : "w-full text-xs px-3 py-1 border border-secondary/20 rounded-full focus:outline-none focus:ring-1 focus:ring-primary/50";
+
   return (
     <form onSubmit={handleSubmit} className="relative flex items-center">
       <input
@@ -19,7 +27,7 @@ export default function SearchInput() {
         value={query}
         onInput={(e) => setQuery((e.target as HTMLInputElement).value)}
         placeholder="Søg..."
-        className="w-full text-xs px-3 py-1 border border-secondary/20 rounded-full focus:outline-none focus:ring-1 focus:ring-primary/50"
+        className={inputClass}
         aria-label="Søgefelt"
       />
       <button

@@ -50,7 +50,7 @@ export default function UpcomingGames({
         {title}
       </h3>
       <Divider spacing="sm" />
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+      <div className="flex flex-nowrap overflow-x-auto gap-4 -mx-4 px-4 md:grid md:grid-cols-3 md:mx-0 md:px-0 [&::-webkit-scrollbar]:hidden [scrollbar-width:none]">
         {games.map((game, index) => {
           const coverImage = game.game?.gameJson
             ? getGameCoverImage(game.game.gameJson, 192, 256)
@@ -64,7 +64,7 @@ export default function UpcomingGames({
               href={gameLink}
               className="no-underline hover:no-underline group"
             >
-              <article className="flex flex-col max-w-[220px] bg-background-light border border-secondary/20 p-4 h-full">
+              <article className="flex flex-col w-[220px] bg-background-light border border-secondary/20 p-4 h-full">
                 <div className="flex mb-2">
                   <div className="mr-3 w-24 aspect-[3/4] relative overflow-hidden flex-shrink-0">
                     <img
