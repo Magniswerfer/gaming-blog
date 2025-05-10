@@ -56,9 +56,9 @@ export default function Layout(
         </div>
 
         {/* Main masthead */}
-        <header className="bg-white pt-4">
+        <header className="bg-white pt-4 pb-4 md:pb-0">
           <div className="max-w-7xl mx-auto px-4">
-            <div className="flex items-center justify-between mb-4">
+            <div className="flex items-center justify-between md:mb-4">
               {/* Left side - Empty spacer */}
               <div className="w-10"></div>
 
