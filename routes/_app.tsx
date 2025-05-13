@@ -7,6 +7,8 @@ export default function App({ Component }: PageProps) {
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <title>silverthred</title>
         <link rel="stylesheet" href="/styles.css" />
+        <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+        <link rel="alternate icon" href="/favicon.ico" type="image/x-icon" />
       </head>
       <body>
         <Component />

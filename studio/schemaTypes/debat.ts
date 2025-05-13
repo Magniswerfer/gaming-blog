@@ -52,6 +52,13 @@ export default defineType({
       of: [{ type: "reference", to: { type: "kategori" } }],
     }),
     defineField({
+      name: "gameData",
+      title: "Spil information",
+      type: "reference",
+      to: { type: "gameData" },
+      description: "Reference til spillets data fra IGDB",
+    }),
+    defineField({
       name: "publishedAt",
       title: "Udgivet den",
       type: "datetime",
@@ -75,10 +82,14 @@ export default defineType({
       title: "title",
       author: "author.name",
       media: "mainImage",
+      gameTitle: "gameData.title",
     },
     prepare(selection) {
-      const { author } = selection;
-      return { ...selection, subtitle: author && `af ${author}` };
+      const { author, gameTitle } = selection;
+      let subtitle = author ? `af ${author}` : "";
+      subtitle += gameTitle ? ` | Spil: ${gameTitle}` : "";
+
+      return { ...selection, subtitle };
     },
   },
 });
